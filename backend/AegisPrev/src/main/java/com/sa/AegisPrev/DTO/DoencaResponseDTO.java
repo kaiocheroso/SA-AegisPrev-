@@ -1,6 +1,7 @@
 package com.sa.AegisPrev.DTO;
 
-public record DoencaRequestDTO(
+public record DoencaResponseDTO(
+
 
 ) {
 }
