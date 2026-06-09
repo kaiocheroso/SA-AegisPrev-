@@ -17,9 +17,16 @@ public class Doenca {
     private String nomeDoenca;
     private String descricaoDoenca;
 
+    private Boolean hereditaria;
+
     @ManyToMany
     private List<Sintoma> sintomas;
 
     @ManyToMany
+    @JoinTable(
+            name = "paciente_doenca",
+            joinColumns = @JoinColumn(name = "doenca_id"),
+            inverseJoinColumns = @JoinColumn(name = "paciente_id")
+    )
     private List<Paciente> pacientes;
 }

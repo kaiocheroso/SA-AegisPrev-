@@ -17,10 +17,6 @@ public class Sintoma {
     private String nomeSintoma;
     private String descricaoSintoma;
 
-    //pacientes manyto
     @ManyToMany
     private List<Paciente> paciente;
-    //sintoma
-    @ManyToMany
-    private List<Sintoma> sintomas;
 }

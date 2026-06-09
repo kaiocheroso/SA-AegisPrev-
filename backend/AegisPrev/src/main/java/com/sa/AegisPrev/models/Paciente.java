@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -12,15 +13,23 @@ import java.util.List;
 public class Paciente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUsuario;
+    private Long idPaciente;
 
-    private String nome;
-    private String cpf;
+    private String nomePaciente;
+    private String cpfPaciente;
+
+    private LocalDate dataNascimento;
 
     @ManyToMany
+    @JoinTable(name = "paciente_sintomas",
+            joinColumns = @JoinColumn(name = "paciente_id"),
+            inverseJoinColumns = @JoinColumn(name = "sintoma_id")
+    )
     private List<Sintoma> sintomas;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "pacientes")
     private List<Doenca> doencas;
 
+    @OneToMany(mappedBy = "paciente")
+    private List<RelacionamentoFamiliar> familiares;
 }
