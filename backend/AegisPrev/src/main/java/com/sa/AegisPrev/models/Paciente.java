@@ -23,4 +23,7 @@ public class Paciente {
     @ManyToMany
     private List<Doenca> doencas;
 
+    @ManyToOne
+    private Medico medico;
+
 }
