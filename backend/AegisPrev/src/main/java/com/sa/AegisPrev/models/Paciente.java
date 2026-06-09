@@ -32,4 +32,8 @@ public class Paciente {
 
     @OneToMany(mappedBy = "paciente")
     private List<RelacionamentoFamiliar> familiares;
+
+    @ManyToOne
+    private Medico medico;
+    
 }
