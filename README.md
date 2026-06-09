@@ -1,14 +1,60 @@
-<h1>⚕️AegisPrev⚕️</h1>
+# ⚕️ AegisPrev
 
-<h2>Integrantes</h2>
-1-Kaio Galvin (PO, Documentaçao)   
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge" alt="Status"/>
+  <img src="https://img.shields.io/badge/Metodologia-Spring e Vue-blue?style=for-the-badge" alt="Metodologia"/>
+</p>
 
-<br>2-Felipe da rosa (full stack)</br>
-<br>3-Samuel Eduardo (full stack)</br>
-<br>4-Eduardo patti (Análise de requisitos, modelagem e banco de dados)</br>
-<br>5-Igor Rabenschlag (QA/Documentação)</br>
-<br>6-Felipe Cardoso (Back-End, Analise de requisitos)</br>
+---
 
+## 📋 Sobre o Projeto
+O **AegisPrev** é uma solução voltada para a área da saúde e prevenção. Este repositório centraliza o desenvolvimento do sistema, focado em entregar uma plataforma robusta, segura e eficiente.
 
-Link do Jira:
-https://estudante-team-saude52.atlassian.net/jira/software/projects/SCRUM/boards/1?jql=assignee%20IN%20%28empty%2C%20712020%3Ab616eb23-9c0f-41f8-80fb-d569eb6324cb%2C%20712020%3A0283a512-7c3d-44e8-a148-9703f716b9f4%29
+---
+
+## 👥 Integrantes e Papéis
+
+Para garantir a organização e a entrega contínua utilizando a metodologia Spring, a equipe está dividida nas seguintes frentes:
+
+| Integrante | Função principal |
+| :--- | :--- |
+| **Kaio Galvin** | Product Owner (PO) & Documentação |
+| **Felipe da Rosa** | Desenvolvedor Full-Stack |
+| **Samuel Eduardo** | Desenvolvedor Full-Stack |
+| **Eduardo Patti** | Análise de Requisitos, Modelagem & Banco de Dados |
+| **Igor Rabenschlag** | Quality Assurance (QA) & Documentação |
+| **Felipe Cardoso** | Desenvolvedor Back-End & Análise de Requisitos |
+
+---
+
+## 🔗 Links Úteis
+
+* **📍 Quadro do Jira:** [Gerenciamento do Projeto](https://estudante-team-saude52.atlassian.net/jira/software/projects/SCRUM/boards/1?cloudId=e86de3a3-eb40-48a3-8685-f62a7eb91335&jql=assignee+IN+%28empty%2C+712020%3Ab616eb23-9c0f-41f8-80fb-d569eb6324cb%2C+712020%3A0283a512-7c3d-44e8-a148-9703f716b9f4%29&atlOrigin=eyJpIjoiYzJlNjhkNmVlMjcxNGQxNDgwZjBhMmQ5YjQ4ODU5ODkiLCJwIjoiaiJ9)
+* **💻 Repositório Principal:** [GitHub - AegisPrev](https://github.com/kaiocheroso/SA-AegisPrev-)
+
+---
+
+## 🚀 Como Executar o Projeto (Breve)
+
+### Pré-requisitos
+Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
+* [Git](https://git-scm.com)
+* [Node.js](https://nodejs.org/en/)
+
+### 📦 Clonando e rodando
+
+```bash
+# Clone este repositório
+$ git clone https://github.com/kaiocheroso/SA-AegisPrev-.git
+
+# Acesse a pasta do projeto
+$ cd SA-AegisPrev-
+
+# Instale as dependências
+$ npm install
+
+# Execute a API (em um terminal)
+$ npm run api
+
+# Execute a aplicação em modo de desenvolvimento (em outro terminal)
+$ npm run dev
