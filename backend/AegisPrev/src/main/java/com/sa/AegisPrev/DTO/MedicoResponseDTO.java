@@ -1,11 +1,15 @@
 package com.sa.AegisPrev.DTO;
 
+import com.sa.AegisPrev.models.Paciente;
+
+import java.util.List;
+
 public record MedicoResponseDTO(
 
         Long idMedico,
         String gamil,
         String password,
-        Long idUsuario
+        List<Paciente> pacientes
 
 ){
 }
