@@ -2,8 +2,10 @@ package com.sa.AegisPrev.service;
 
 import com.sa.AegisPrev.DTO.MedicoRequestDTO;
 import com.sa.AegisPrev.DTO.MedicoResponseDTO;
+import com.sa.AegisPrev.DTO.PacienteResponseDTO;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
 import com.sa.AegisPrev.models.Medico;
+import com.sa.AegisPrev.models.Paciente;
 import com.sa.AegisPrev.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +20,30 @@ public class MedicoService {
     }
 
     private MedicoResponseDTO toResponseDTO(Medico medico) {
+
         return new MedicoResponseDTO(
                 medico.getIdMedico(),
+                medico.getNome(),
                 medico.getEmail(),
-                medico.getPassword(),
                 medico.getPacientes()
+                        .stream().
+                        map(paciente -> new PacienteResponseDTO(
+                                paciente.getIdPaciente(),
+                                paciente.getNomePaciente(),
+                                paciente.getCpfPaciente()
+                        ))
+                        .toList()
         );
+    }
+
+    private Medico toEntity(MedicoRequestDTO dto){
+        Medico medico = new Medico();
+        medico.setNome(dto.nome());
+        medico.setSexo(dto.sexo());
+        medico.setIdade(dto.idade());
+        medico.setEmail(dto.email());
+        medico.setPassword(dto.password());
+        return medico;
     }
 
     public List<MedicoResponseDTO> listar() {
@@ -40,12 +60,34 @@ public class MedicoService {
          return toResponseDTO(medico);
     }
 
-    public MedicoResponseDTO salvar(MedicoRequestDTO request){
-        Medico medico = new Medico();
-        medico.setEmail(request.email());
-        medico.setPassword(request.password());
+    public List<MedicoResponseDTO> buscarPorNome(String nome){
+        return medicoRepository.findByNomeEqualsIgnoreCase(nome)
+                .stream()
+                .map(
+                        this::toResponseDTO
+                )
+                .toList();
+    }
 
+    public MedicoResponseDTO salvar(MedicoRequestDTO request){
+        Medico medico = toEntity(request);
         Medico salvo = medicoRepository.save(medico);
         return toResponseDTO(salvo);
+    }
+
+    public MedicoResponseDTO atualizar(Long idMedico, MedicoRequestDTO request){
+        Medico medicoExistente = medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID do medico nao encontrado"));
+        medicoExistente.setNome(request.nome());
+        medicoExistente.setSexo(request.sexo());
+        medicoExistente.setIdade(request.idade());
+        medicoExistente.setEmail(request.email());
+        medicoExistente.setPassword(request.password());
+        Medico atualizado = medicoRepository.save(medicoExistente);
+        return toResponseDTO(atualizado);
+    }
+
+    public void deletar(Long idMedico){
+        Medico medico = medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID nao encontrado"));
+        medicoRepository.delete(medico);
     }
 }

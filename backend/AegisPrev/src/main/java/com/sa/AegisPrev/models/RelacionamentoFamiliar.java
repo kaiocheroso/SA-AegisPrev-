@@ -16,5 +16,5 @@ public class RelacionamentoFamiliar {
 
     @Enumerated(EnumType.STRING)
     private GrauParentesco grauParentesco;
-
+    //classe para a parte de doencas hereditarias
 }

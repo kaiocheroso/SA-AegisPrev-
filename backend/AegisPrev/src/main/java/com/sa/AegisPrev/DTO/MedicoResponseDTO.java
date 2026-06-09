@@ -5,11 +5,9 @@ import com.sa.AegisPrev.models.Paciente;
 import java.util.List;
 
 public record MedicoResponseDTO(
-
         Long idMedico,
+        String nome,
         String gamil,
-        String password,
-        List<Paciente> pacientes
-
+        List<PacienteResponseDTO> pacientes
 ){
 }
