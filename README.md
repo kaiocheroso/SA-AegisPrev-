@@ -1,3 +1,8 @@
+Deve conter nome do projeto, integrantes, tema, tecnologias previstas e instrução inicial de organização.
+
+
+
+
 # ⚕️ AegisPrev
 
 <p align="center">
