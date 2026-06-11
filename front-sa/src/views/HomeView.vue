@@ -7,12 +7,15 @@
         class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"
       >
         <h1 class="text-2xl font-bold text-cyan-800">AegisPrev</h1>
-
-        <button
-          class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition"
-        >
-          Sair
-        </button>
+        <div>
+          <RouterLink to="/cadastro">
+            <button
+              class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition"
+            >
+              👤Cadastrar
+            </button>
+          </RouterLink>
+        </div>
       </div>
     </header>
 
@@ -50,24 +53,22 @@
         <button
           class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition text-left"
         >
-          <h4 class="font-semibold text-cyan-700 text-lg">👤 Pacientes</h4>
-          <p class="text-gray-500 text-sm mt-2">
-            Gerenciar cadastro de pacientes
-          </p>
+          <h4 class="font-semibold text-cyan-700 text-lg">Pacientes</h4>
+          <p class="text-gray-500 text-sm mt-2">Lista de pacientes</p>
         </button>
 
         <button
           class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition text-left"
         >
-          <h4 class="font-semibold text-cyan-700 text-lg"></h4>
-          <p class="text-gray-500 text-sm mt-2">Historico</p>
+          <h4 class="font-semibold text-cyan-700 text-lg">Histórico</h4>
+          <p class="text-gray-500 text-sm mt-2">Historico dos pacientes</p>
         </button>
 
         <button
           class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition text-left"
         >
-          <h4 class="font-semibold text-cyan-700 text-lg"></h4>
-          <p class="text-gray-500 text-sm mt-2">Descrição</p>
+          <h4 class="font-semibold text-cyan-700 text-lg">Descrição</h4>
+          <p class="text-gray-500 text-sm mt-2">Descrição dos pacientes</p>
         </button>
 
         <button
