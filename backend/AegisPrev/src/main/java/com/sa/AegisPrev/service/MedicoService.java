@@ -1,8 +1,6 @@
 package com.sa.AegisPrev.service;
 
-import com.sa.AegisPrev.DTO.MedicoRequestDTO;
-import com.sa.AegisPrev.DTO.MedicoResponseDTO;
-import com.sa.AegisPrev.DTO.PacienteResponseDTO;
+import com.sa.AegisPrev.DTO.*;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
 import com.sa.AegisPrev.models.Medico;
 import com.sa.AegisPrev.models.Paciente;
@@ -24,13 +22,28 @@ public class MedicoService {
         return new MedicoResponseDTO(
                 medico.getIdMedico(),
                 medico.getNome(),
-                medico.getEmail(),
-                medico.getPacientes()
+                medico.getUsuario().getEmail(),
+                medico.getConsultas()
                         .stream().
-                        map(paciente -> new PacienteResponseDTO(
-                                paciente.getIdPaciente(),
-                                paciente.getNomePaciente(),
-                                paciente.getCpfPaciente()
+                        map(consulta -> new ConsultaResponseDTO(
+                                consulta.getIdConsulta(),
+                                consulta.getMedico().getIdMedico(),
+                                consulta.getPaciente().getIdPaciente(),
+                                consulta.getDataConsulta(),
+                                consulta.getDescricao(),
+                                consulta.getDoencas()
+                                        .stream()
+                                        .map(
+                                        doenca -> new DoencaResponseDTO(
+                                                doenca.getIdDoenca(),
+                                                doenca.getNomeDoenca(),
+                                                doenca.getDescricaoDoenca(),
+                                                doenca.getHereditaria() == false ? null : true ,
+                                                null,
+                                                doenca.getPacientes(),
+                                                doenca.getConsultas()
+                                        )
+                                ).toList()
                         ))
                         .toList()
         );

@@ -1,9 +1,13 @@
 package com.sa.AegisPrev.DTO;
 
-public record SintomaResponseDTO (
+import com.sa.AegisPrev.models.Paciente;
 
-         Long idSintoma,
-         String nomeSintoma,
-         String descricaoSintoma
+import java.util.List;
+
+public record SintomaResponseDTO (
+        Long idSintoma,
+        String nomeSintoma,
+        String descricaoSintoma,
+        List<PacienteResumoDTO> pacientes
 ){
 }

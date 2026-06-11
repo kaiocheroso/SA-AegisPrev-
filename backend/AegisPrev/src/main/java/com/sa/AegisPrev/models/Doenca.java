@@ -23,5 +23,8 @@ public class Doenca {
     private List<Sintoma> sintomas;
 
     @ManyToMany
+    private List<Paciente> pacientes;
+
+    @ManyToMany
     private List<Consulta> consultas;
 }
