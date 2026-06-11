@@ -27,13 +27,10 @@ public class Paciente {
     )
     private List<Sintoma> sintomas;
 
-    @ManyToMany(mappedBy = "pacientes")
-    private List<Doenca> doencas;
-
     @OneToMany(mappedBy = "paciente")
     private List<RelacionamentoFamiliar> familiares;
 
-    @ManyToOne
-    private Medico medico;
+    @OneToMany
+    private List<Consulta> consultas;
     
 }

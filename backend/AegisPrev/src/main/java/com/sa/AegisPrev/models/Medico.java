@@ -17,9 +17,10 @@ public class Medico {
     private String nome;
     private String sexo;
     private Integer idade;
-    private String email;
-    private String password;
 
     @OneToMany(mappedBy = "medico")
-    private List<Paciente> pacientes;
+    private List<Consulta> consultas;
+
+    @OneToOne
+    private Usuario usuario;
 }
