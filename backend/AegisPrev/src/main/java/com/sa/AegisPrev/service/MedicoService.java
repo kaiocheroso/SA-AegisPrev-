@@ -111,4 +111,11 @@ public class MedicoService {
         Medico medico = medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID nao encontrado"));
         medicoRepository.delete(medico);
     }
+
+    /// PRECISAMOS FAZER O DISABLE DO CSRF NO SECURITY.
+    /// COLOCAR UM DB NO APPLICATION PROPERTIES.
+    /// FAZER COM QUE O RELACIONAMENTO ENTRE PACIENTE E MEDICO SE TORNE =
+    ///     MEDICO -> CONSULTA <- PACIENTE
+    /// com isto , provavelmente vai voltar a funcionar o codigo.
+    /// esse projeto vai ficar bom rapaziada :)
 }
