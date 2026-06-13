@@ -13,7 +13,11 @@ public record MedicoRequestDTO (
         String sexo,
 
         @NotNull(message = "nao pode ser nula")
-        Integer idade
+        Integer idade,
 
+        @NotBlank(message = "Email nao pode estar vazio")
+        String email,
+        @NotBlank(message = "Senha nao pode estar vazio")
+        String password
 ){
 }

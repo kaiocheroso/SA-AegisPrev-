@@ -4,6 +4,8 @@ import com.sa.AegisPrev.DTO.*;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
 import com.sa.AegisPrev.models.Medico;
 import com.sa.AegisPrev.models.Paciente;
+import com.sa.AegisPrev.models.Papel;
+import com.sa.AegisPrev.models.Usuario;
 import com.sa.AegisPrev.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,40 +24,32 @@ public class MedicoService {
         return new MedicoResponseDTO(
                 medico.getIdMedico(),
                 medico.getNome(),
+                medico.getSexo(),
+                medico.getIdade(),
                 medico.getUsuario().getEmail(),
                 medico.getConsultas()
-                        .stream().
-                        map(consulta -> new ConsultaResponseDTO(
-                                consulta.getIdConsulta(),
-                                consulta.getMedico().getIdMedico(),
-                                consulta.getPaciente().getIdPaciente(),
-                                consulta.getDataConsulta(),
-                                consulta.getDescricao(),
-                                consulta.getDoencas()
-                                        .stream()
-                                        .map(
-                                        doenca -> new DoencaResponseDTO(
-                                                doenca.getIdDoenca(),
-                                                doenca.getNomeDoenca(),
-                                                doenca.getDescricaoDoenca(),
-                                                doenca.getHereditaria() == false ? null : true ,
-                                                null,
-                                                doenca.getPacientes(),
-                                                doenca.getConsultas()
-                                        )
-                                ).toList()
-                        ))
-                        .toList()
+                        .stream().map(consulta -> new ConsultaResumoDTO(
+                                    consulta.getIdConsulta(),
+                                    consulta.getDataConsulta(),
+                                    consulta.getDescricao()
+                                )
+                        ).toList()
         );
     }
 
     private Medico toEntity(MedicoRequestDTO dto){
+        Usuario usuario = new Usuario();
+        usuario.setEmail(dto.email());
+        usuario.setPassword(dto.password());
+        usuario.setPapeis(Papel.MEDICO);
+
         Medico medico = new Medico();
+
         medico.setNome(dto.nome());
         medico.setSexo(dto.sexo());
         medico.setIdade(dto.idade());
-        medico.setEmail(dto.email());
-        medico.setPassword(dto.password());
+
+        medico.setUsuario(usuario);
         return medico;
     }
 
@@ -69,12 +63,12 @@ public class MedicoService {
     }
 
     public MedicoResponseDTO buscarPorEmail(String email){
-         Medico medico = medicoRepository.findByEmail(email).orElseThrow(() -> new RecursoNaoEncontradoException("Email nao encontrado"));
+         Medico medico = medicoRepository.findByUsuarioEmail(email).orElseThrow(() -> new RecursoNaoEncontradoException("Email nao encontrado"));
          return toResponseDTO(medico);
     }
 
     public List<MedicoResponseDTO> buscarPorNome(String nome){
-        return medicoRepository.findByNomeEqualsIgnoreCase(nome)
+        return medicoRepository.findByNomeContainingIgnoreCase(nome)
                 .stream()
                 .map(
                         this::toResponseDTO
@@ -89,15 +83,18 @@ public class MedicoService {
     }
 
     public MedicoResponseDTO atualizar(Long idMedico, MedicoRequestDTO request){
+        //nao e necessario mexer no usuarios e nem em consulta na parte da atualizacao.
+        //iremos criar um mwetodo apenas para atualiazr a roles do medico.
         Medico medicoExistente = medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID do medico nao encontrado"));
+
         medicoExistente.setNome(request.nome());
         medicoExistente.setSexo(request.sexo());
         medicoExistente.setIdade(request.idade());
-        medicoExistente.setEmail(request.email());
-        medicoExistente.setPassword(request.password());
+
         Medico atualizado = medicoRepository.save(medicoExistente);
         return toResponseDTO(atualizado);
     }
+
 
     public void deletar(Long idMedico){
         Medico medico = medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID nao encontrado"));

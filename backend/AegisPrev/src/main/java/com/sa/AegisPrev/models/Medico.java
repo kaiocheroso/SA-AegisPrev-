@@ -21,6 +21,6 @@ public class Medico {
     @OneToMany(mappedBy = "medico")
     private List<Consulta> consultas;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Usuario usuario;
 }
