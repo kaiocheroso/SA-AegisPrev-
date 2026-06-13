@@ -13,6 +13,8 @@ import java.util.List;
 
 @Service
 public class MedicoService {
+    //Dica do dia, se estiver funcionando, NÃO MEXA
+
     private final MedicoRepository medicoRepository;
 
     public MedicoService(MedicoRepository medicoRepository) {
@@ -53,27 +55,36 @@ public class MedicoService {
         return medico;
     }
 
-    public List<MedicoResponseDTO> listar() {
-        return medicoRepository.findAll().stream().map(this::toResponseDTO).toList();
+    public List<MedicoResponseDTO> listar(String email, String nome) {
+        List<Medico> medicos;
+
+        if (email != null){
+            medicos = buscarPorEmail(email);
+        } else if (nome != null) {
+            medicos = buscarPorNome(nome);
+        } else {
+            medicos = medicoRepository.findAll();
+        }
+
+        return medicos.stream().map(this::toResponseDTO).toList();
     }
 
     public MedicoResponseDTO buscarPorId(Long idMedico){
-        Medico medico = medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID nao encontrado"));
-        return toResponseDTO(medico);
+        return toResponseDTO(buscarId(idMedico));
     }
 
-    public MedicoResponseDTO buscarPorEmail(String email){
-         Medico medico = medicoRepository.findByUsuarioEmail(email).orElseThrow(() -> new RecursoNaoEncontradoException("Email nao encontrado"));
-         return toResponseDTO(medico);
+    public Medico buscarId(Long idMedico){
+        //metodo para buscar por id e retorna um medico.
+        return medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID nao encontrado"));
     }
 
-    public List<MedicoResponseDTO> buscarPorNome(String nome){
-        return medicoRepository.findByNomeContainingIgnoreCase(nome)
-                .stream()
-                .map(
-                        this::toResponseDTO
-                )
-                .toList();
+    public List<Medico> buscarPorEmail(String email){
+        //deveria ser optional, mas foi o que deu para colocar no listar();
+         return medicoRepository.findByUsuarioEmail(email);
+    }
+
+    public List<Medico> buscarPorNome(String nome){
+        return medicoRepository.findByNomeContainingIgnoreCase(nome);
     }
 
     public MedicoResponseDTO salvar(MedicoRequestDTO request){
@@ -85,7 +96,7 @@ public class MedicoService {
     public MedicoResponseDTO atualizar(Long idMedico, MedicoRequestDTO request){
         //nao e necessario mexer no usuarios e nem em consulta na parte da atualizacao.
         //iremos criar um mwetodo apenas para atualiazr a roles do medico.
-        Medico medicoExistente = medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID do medico nao encontrado"));
+        Medico medicoExistente = buscarId(idMedico);
 
         medicoExistente.setNome(request.nome());
         medicoExistente.setSexo(request.sexo());
