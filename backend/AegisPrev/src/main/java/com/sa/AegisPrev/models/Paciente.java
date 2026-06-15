@@ -31,9 +31,6 @@ public class Paciente {
     @JoinTable(name = "pacientes_doenca")
     private List<Doenca> doencas;
 
-    @OneToMany(mappedBy = "paciente")
-    private List<RelacionamentoFamiliar> familiares;
-
     @OneToMany
     private List<Consulta> consultas;
     
