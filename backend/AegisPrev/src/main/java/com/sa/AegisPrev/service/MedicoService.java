@@ -32,10 +32,11 @@ public class MedicoService {
                 medico.getConsultas()
                         .stream().map(consulta -> new ConsultaResumoDTO(
                                     consulta.getIdConsulta(),
+                                    consulta.getMedico().getIdMedico(),
+                                    consulta.getPaciente().getIdPaciente(),
                                     consulta.getDataConsulta(),
                                     consulta.getDescricao()
-                                )
-                        ).toList()
+                        )).toList()
         );
     }
 

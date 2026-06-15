@@ -14,8 +14,8 @@ public record PacienteRequestDTO (
         @CPF(message = "O CPF informado é inválido")
         String cpfPaciente,
         @DateTimeFormat(pattern = "dd/MM/yyyy")
-        LocalDate dataNascimento,
-        @NotNull(message = "Id do médico nao pode ser nulo")
-        Long idMedico
+        LocalDate dataNascimento
+        /*@NotNull(message = "Id do médico nao pode ser nulo")
+        Long idMedico*/
 ){
 }
