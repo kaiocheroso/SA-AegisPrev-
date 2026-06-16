@@ -31,16 +31,20 @@
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
           <label class="form-label">Sexo</label>
-          <input
+          <select
             v-model="form.sexo"
-            type="text"
-            placeholder="Digite seu sexo"
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          />
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder"
+          >
+            <option value="" disabled>Selecione seu sexo</option>
+            <option value="masculino">Masculino</option>
+            <option value="feminino">Feminino</option>
+          </select>
+
           <label class="form-label">Idade</label>
           <input
             v-model="form.idade"
             type="number"
+            min="1"
             placeholder="Digite sua idade"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
@@ -55,7 +59,9 @@
 
         <p class="text-center text-gray-500 mt-4 text-sm">
           Já possui uma conta?
-          <a href="#" class="text-blue-600 hover:underline">Entrar</a>
+          <router-link to="/Entrar" class="text-blue-600 hover:underline"
+            >Entrar</router-link
+          >
         </p>
       </div>
     </div>

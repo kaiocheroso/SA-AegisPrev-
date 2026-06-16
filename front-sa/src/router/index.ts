@@ -39,7 +39,13 @@ const router = createRouter({
       name: "Consulta",
       component: () => import("../views/ConsultaView.vue"),
     },
+    {
+      path: "/Entrar",
+      name: "Entrar",
+      component: () => import("../views/EntrarView.vue"),
+    },
   ],
 });
+("");
 
 export default router;
