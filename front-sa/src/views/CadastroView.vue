@@ -9,17 +9,39 @@
         </h1>
 
         <div class="space-y-4">
+          <label class="form-label">Nome completo</label>
+          <input
+            v-model="form.nome"
+            type="text"
+            placeholder="Digite seu nome"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+          <label class="form-label">Email</label>
           <input
             v-model="form.email"
             type="email"
             placeholder="Digite seu email"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
-
+          <label class="form-label">Senha</label>
           <input
             v-model="form.senha"
             type="password"
             placeholder="Digite sua senha"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+          <label class="form-label">Sexo</label>
+          <input
+            v-model="form.sexo"
+            type="text"
+            placeholder="Digite seu sexo"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+          <label class="form-label">Idade</label>
+          <input
+            v-model="form.idade"
+            type="number"
+            placeholder="Digite sua idade"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
 
@@ -53,8 +75,12 @@ const form = ref({} as Usuario);
 
 async function cadastrar(): Promise<void> {
   await postUsuario({
+    nome: form.value.nome,
+
     email: form.value.email,
     senha: form.value.senha,
+    sexo: form.value.sexo,
+    idade: form.value.idade,
   });
   router.push("/home");
 }

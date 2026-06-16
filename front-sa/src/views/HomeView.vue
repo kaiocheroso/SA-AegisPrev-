@@ -8,7 +8,7 @@
       >
         <h1 class="text-2xl font-bold text-cyan-800">AegisPrev</h1>
         <div>
-          <RouterLink to="/cadastro">
+          <RouterLink to="/Consulta">
             <button
               class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition"
             >
