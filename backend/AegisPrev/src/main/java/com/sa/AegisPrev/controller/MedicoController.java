@@ -42,7 +42,7 @@ public class MedicoController {
     }
 
     @PutMapping("/{idMedico}")
-    public MedicoResponseDTO atualizar(@Valid @PathVariable Long idMedico, @RequestBody MedicoRequestDTO dto){
+    public MedicoResponseDTO atualizar(@Valid @PathVariable Long idMedico, @Valid @RequestBody MedicoRequestDTO dto){
         return medicoService.atualizar(idMedico, dto);
     }
 

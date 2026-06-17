@@ -11,6 +11,7 @@ public record PacienteRequestDTO (
 
         @NotBlank(message = "O paciente deve conter um nome ")
         String nomePaciente,
+        @NotBlank(message = "CPF nao pode estar vazio")
         @CPF(message = "O CPF informado é inválido")
         String cpfPaciente,
         @DateTimeFormat(pattern = "dd/MM/yyyy")
