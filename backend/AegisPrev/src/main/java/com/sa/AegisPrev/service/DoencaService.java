@@ -5,9 +5,10 @@ import com.sa.AegisPrev.DTO.SintomaResumoDTO;
 import com.sa.AegisPrev.models.Doenca;
 import com.sa.AegisPrev.DTO.*;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
-import com.sa.AegisPrev.models.*;
 import com.sa.AegisPrev.repository.DoencaRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DoencaService {
@@ -23,7 +24,6 @@ public class DoencaService {
                 doenca.getNomeDoenca(),
                 doenca.getDescricaoDoenca(),
                 doenca.getHereditaria(),
-
                 doenca.getSintomas().stream().map(sintoma -> new SintomaResumoDTO(
                         sintoma.getIdSintoma(),
                         sintoma.getNomeSintoma()
@@ -67,5 +67,30 @@ public class DoencaService {
 
         Doenca atualizado = doencaRepository.save(doencaExistente);
         return toResponseDTO(atualizado);
+    }
+
+    public DoencaResponseDTO pegarPorId(Long id){
+        return toResponseDTO(buscarId(id));
+    }
+
+    public List<DoencaResponseDTO> listar(String nomeDoenca, Boolean isHereditaria){
+        List<Doenca> doencas;
+
+        if (nomeDoenca != null){
+            doencas = buscarNomeDoenca(nomeDoenca);
+        } else if (isHereditaria != false) {
+            doencas = buscarPorHereditaria();
+        }else {
+            doencas = doencaRepository.findAll();
+        }
+        return doencas.stream().map(this::toResponseDTO).toList();
+    }
+
+    private List<Doenca> buscarNomeDoenca(String nomeDoenca){
+        return doencaRepository.findByNomeDoencaContainingIgnoreCase(nomeDoenca);
+    }
+
+    private List<Doenca> buscarPorHereditaria(){
+        return doencaRepository.findByHereditaria(true);
     }
 }
