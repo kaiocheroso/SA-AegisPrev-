@@ -1,14 +1,11 @@
 package com.sa.AegisPrev.service;
 
-<<<<<<< HEAD
 import com.sa.AegisPrev.DTO.DoencaResponseDTO;
 import com.sa.AegisPrev.DTO.SintomaResumoDTO;
 import com.sa.AegisPrev.models.Doenca;
-=======
 import com.sa.AegisPrev.DTO.*;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
 import com.sa.AegisPrev.models.*;
->>>>>>> fbf516fc641f1de23bea2b31a48514af6e260381
 import com.sa.AegisPrev.repository.DoencaRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +23,11 @@ public class DoencaService {
                 doenca.getNomeDoenca(),
                 doenca.getDescricaoDoenca(),
                 doenca.getHereditaria(),
-<<<<<<< HEAD
+
                 doenca.getSintomas().stream().map(sintoma -> new SintomaResumoDTO(
                         sintoma.getIdSintoma(),
                         sintoma.getNomeSintoma()
                 )).toList()
-=======
-                doenca.getSintomas()
-                        .stream()
-                        .map(sintoma -> new SintomaResumoDTO(
-                                sintoma.getIdSintoma(),
-                                sintoma.getNomeSintoma()
-                        )).toList()
->>>>>>> fbf516fc641f1de23bea2b31a48514af6e260381
         );
     }
 
