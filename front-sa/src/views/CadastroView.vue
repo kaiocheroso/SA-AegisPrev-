@@ -4,9 +4,10 @@
       class="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-300 via-blue-100 to-emerald-300"
     >
       <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-1">
           Cadastro
         </h1>
+        <p class="text-center text-gray-500 mb-6">Cadastre um novo usuário</p>
 
         <div class="space-y-4">
           <label class="form-label">Nome completo</label>
@@ -75,8 +76,6 @@ import { postUsuario } from "../services/api";
 import type { Usuario } from "@/interfaces/Usuario";
 
 const router = useRouter();
-const email = ref("");
-const senha = ref("");
 const form = ref({} as Usuario);
 
 async function cadastrar(): Promise<void> {

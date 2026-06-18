@@ -12,7 +12,7 @@
             <button
               class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition"
             >
-              👤Cadastrar
+              Consulta
             </button>
           </RouterLink>
         </div>
@@ -49,7 +49,7 @@
 
       <h3 class="text-2xl font-bold text-cyan-800 mb-4"></h3>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <button
           class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition text-left"
         >
@@ -69,13 +69,6 @@
         >
           <h4 class="font-semibold text-cyan-700 text-lg">Descrição</h4>
           <p class="text-gray-500 text-sm mt-2">Descrição dos pacientes</p>
-        </button>
-
-        <button
-          class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition text-left"
-        >
-          <h4 class="font-semibold text-cyan-700 text-lg"></h4>
-          <p class="text-gray-500 text-sm mt-2"></p>
         </button>
       </div>
     </main>
