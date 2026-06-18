@@ -1,8 +1,14 @@
 package com.sa.AegisPrev.service;
 
+<<<<<<< HEAD
 import com.sa.AegisPrev.DTO.DoencaResponseDTO;
 import com.sa.AegisPrev.DTO.SintomaResumoDTO;
 import com.sa.AegisPrev.models.Doenca;
+=======
+import com.sa.AegisPrev.DTO.*;
+import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
+import com.sa.AegisPrev.models.*;
+>>>>>>> fbf516fc641f1de23bea2b31a48514af6e260381
 import com.sa.AegisPrev.repository.DoencaRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +26,57 @@ public class DoencaService {
                 doenca.getNomeDoenca(),
                 doenca.getDescricaoDoenca(),
                 doenca.getHereditaria(),
+<<<<<<< HEAD
                 doenca.getSintomas().stream().map(sintoma -> new SintomaResumoDTO(
                         sintoma.getIdSintoma(),
                         sintoma.getNomeSintoma()
                 )).toList()
+=======
+                doenca.getSintomas()
+                        .stream()
+                        .map(sintoma -> new SintomaResumoDTO(
+                                sintoma.getIdSintoma(),
+                                sintoma.getNomeSintoma()
+                        )).toList()
+>>>>>>> fbf516fc641f1de23bea2b31a48514af6e260381
         );
     }
 
+    public void deletar(Long IdDoenca){
+        Doenca doenca = doencaRepository.findById(IdDoenca).orElseThrow(() -> new RecursoNaoEncontradoException("ID nao encontrado"));
+        doencaRepository.delete(doenca);
+    }
 
+    private Doenca toEntity(DoencaRequestDTO dto){
+        Doenca doenca  = new Doenca();
+
+        doenca.setIdDoenca(dto.idDoenca());
+        doenca.setDescricaoDoenca(dto.descricaoDoenca());
+        doenca.setNomeDoenca(dto.nomeDoenca());
+        doenca.setHereditaria(dto.hereditaria());
+
+        return doenca;
+    }
+
+    public DoencaResponseDTO salvar(DoencaRequestDTO request){
+        Doenca doenca = toEntity(request);
+        Doenca salvo = doencaRepository.save(doenca);
+        return toResponseDTO(salvo);
+    }
+
+    public Doenca buscarId(Long IdDoenca) {
+        return doencaRepository.findById(IdDoenca).orElseThrow(() -> new RecursoNaoEncontradoException("ID nao encontrado"));
+
+    }
+    public DoencaResponseDTO atualizar(Long IdDoenca, DoencaRequestDTO request){
+        Doenca doencaExistente = buscarId(IdDoenca);
+
+        doencaExistente.setIdDoenca(request.idDoenca());
+        doencaExistente.setDescricaoDoenca(request.descricaoDoenca());
+        doencaExistente.setNomeDoenca(request.nomeDoenca());
+        doencaExistente.setHereditaria(request.hereditaria());
+
+        Doenca atualizado = doencaRepository.save(doencaExistente);
+        return toResponseDTO(atualizado);
+    }
 }
