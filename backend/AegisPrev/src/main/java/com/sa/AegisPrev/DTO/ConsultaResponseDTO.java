@@ -9,6 +9,7 @@ public record ConsultaResponseDTO(
         PacienteResumoDTO paciente,
         LocalDateTime dataConsulta,
         String descricao,
-        List<DoencaResumoDTO> doencas
+        List<DoencaResumoDTO> doencas,
+        List<DoencaPrevistaDTO> previsoes
 ) {
 }

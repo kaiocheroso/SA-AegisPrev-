@@ -2,9 +2,8 @@ package com.sa.AegisPrev.service;
 
 import com.sa.AegisPrev.DTO.*;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
-import com.sa.AegisPrev.models.Consulta;
-import com.sa.AegisPrev.models.Medico;
-import com.sa.AegisPrev.models.Paciente;
+import com.sa.AegisPrev.models.*;
+import com.sa.AegisPrev.repository.DoencaRepository;
 import com.sa.AegisPrev.repository.MedicoRepository;
 import com.sa.AegisPrev.repository.PacienteRepository;
 import org.springframework.stereotype.Service;
@@ -20,12 +19,14 @@ public class ConsultaService {
     private final ConsultaRepository repository;
     private final MedicoRepository medicoRepository;
     private final PacienteRepository pacienteRepository;
+    private final DoencaRepository doencaRepository;
 
 
-    public ConsultaService(ConsultaRepository repository, MedicoRepository medicoRepository, PacienteRepository pacienteRepository) {
+    public ConsultaService(ConsultaRepository repository, MedicoRepository medicoRepository, PacienteRepository pacienteRepository, DoencaRepository doencaRepository) {
         this.repository = repository;
         this.medicoRepository = medicoRepository;
         this.pacienteRepository = pacienteRepository;
+        this.doencaRepository = doencaRepository;
     }
 
     private ConsultaResponseDTO toResponse(Consulta consulta){
@@ -45,7 +46,8 @@ public class ConsultaService {
                 consulta.getDoencas().stream().map(doenca -> new DoencaResumoDTO(
                         doenca.getIdDoenca(),
                         doenca.getNomeDoenca()
-                )).toList()
+                )).toList(),
+                calcularPrevisoes(consulta.getPaciente())
         );
     }
 
@@ -71,13 +73,85 @@ public class ConsultaService {
         consulta.setDataConsulta(LocalDateTime.now()); //talvez tenha que apagar o date do consultaRequest
         consulta.setDescricao(dto.descricao());
 
+        List<Doenca> previsoes = preverDoencas(paciente);
+        consulta.setDoencas(previsoes);
+
         Consulta salvo = repository.save(consulta);
         return toResponse(salvo);
     }
 
-    public ConsultaResponseDTO atualizar(ConsultaRequest dto){
+    public ConsultaResponseDTO atualizar(Long idConsulta, ConsultaRequest dto){
 
+        Consulta consulta = pegarId(idConsulta);
+
+        Medico medico = medicoRepository.findById(dto.idMedico())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("ID do medico nao encontrado"));
+
+        Paciente paciente = pacienteRepository.findById(dto.idPaciente())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("ID do paciente nao encontrado"));
+
+        consulta.setMedico(medico);
+        consulta.setPaciente(paciente);
+        consulta.setDescricao(dto.descricao());
+
+        consulta.setDoencas(preverDoencas(paciente));
+
+        Consulta atualizada = repository.save(consulta);
+
+        return toResponse(atualizada);
     }
 
+    public void deletar(Long idConsulta){
+        Consulta consulta = pegarId(idConsulta);
+        repository.delete(consulta);
+    }
+
+    private List<Doenca> preverDoencas(Paciente paciente){
+
+        List<Sintoma> sintomasPaciente = paciente.getSintomas();
+
+        return doencaRepository.findAll()
+                .stream()
+                .filter(doenca ->
+                        doenca.getSintomas()
+                                .stream()
+                                .anyMatch(sintomasPaciente::contains)
+                )
+                .toList();
+    }
+
+    private List<DoencaPrevistaDTO> calcularPrevisoes(Paciente paciente){
+
+        List<Sintoma> sintomasPaciente = paciente.getSintomas();
+
+        return doencaRepository.findAll()
+                .stream()
+                .map(doenca -> {
+
+                    long coincidencias = doenca.getSintomas()
+                            .stream()
+                            .filter(sintomasPaciente::contains)
+                            .count();
+
+                    double compatibilidade = 0;
+
+                    if (!sintomasPaciente.isEmpty()) {
+                        compatibilidade =
+                                ((double) coincidencias / sintomasPaciente.size()) * 100;
+                    }
+
+                    return new DoencaPrevistaDTO(
+                            doenca.getIdDoenca(),
+                            doenca.getNomeDoenca(),
+                            compatibilidade
+                    );
+                })
+                .filter(dto -> dto.compatibilidade() > 0)
+                .sorted((a, b) ->
+                        Double.compare(
+                                b.compatibilidade(),
+                                a.compatibilidade()))
+                .toList();
+    }
 
 }
