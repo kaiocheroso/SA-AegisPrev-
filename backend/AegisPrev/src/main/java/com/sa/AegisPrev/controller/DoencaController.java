@@ -17,6 +17,16 @@ public class DoencaController {
         this.service = service;
     }
 
+    @GetMapping
+    public List<DoencaResponseDTO> listar(String nomeDoenca, Boolean isHereditaria){
+        return service.listar(nomeDoenca, isHereditaria);
+    }
+
+    @GetMapping("/{id}")
+    public DoencaResponseDTO pegarId(@PathVariable Long id){
+        return service.pegarPorId(id);
+    }
+
     @PostMapping
     public DoencaResponseDTO salvar(@RequestBody DoencaRequestDTO dto) {
         return service.salvar(dto);
