@@ -3,6 +3,7 @@ package com.sa.AegisPrev.service;
 import com.sa.AegisPrev.DTO.*;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
 import com.sa.AegisPrev.models.*;
+import com.sa.AegisPrev.repository.ConsultaRepository;
 import com.sa.AegisPrev.repository.DoencaRepository;
 import com.sa.AegisPrev.repository.MedicoRepository;
 import com.sa.AegisPrev.repository.PacienteRepository;
