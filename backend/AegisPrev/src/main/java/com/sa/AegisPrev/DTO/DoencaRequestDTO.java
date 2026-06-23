@@ -11,6 +11,7 @@ public record DoencaRequestDTO (
         Long idDoenca,
         String nomeDoenca,
         String descricaoDoenca,
-        Boolean hereditaria
+        Boolean hereditaria,
+        List<Long> idSintomas
 ) {
 }

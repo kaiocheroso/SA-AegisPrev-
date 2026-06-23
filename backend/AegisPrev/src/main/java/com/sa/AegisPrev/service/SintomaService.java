@@ -2,24 +2,18 @@ package com.sa.AegisPrev.service;
 
 import com.sa.AegisPrev.DTO.*;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
-import com.sa.AegisPrev.models.Consulta;
-import com.sa.AegisPrev.models.Doenca;
 import com.sa.AegisPrev.models.Sintoma;
-import com.sa.AegisPrev.repository.DoencaRepository;
 import com.sa.AegisPrev.repository.SintomaRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class SintomaService {
     private final SintomaRepository repository;
-    private final DoencaRepository doencaRepository;
 
-    public SintomaService(SintomaRepository repository, DoencaRepository doencaRepository) {
+    public SintomaService(SintomaRepository repository) {
         this.repository = repository;
-        this.doencaRepository = doencaRepository;
     }
 
     private SintomaResponseDTO toResponse(Sintoma sintoma){
@@ -44,9 +38,6 @@ public class SintomaService {
 
         sintoma.setNomeSintoma(dto.nomeSintoma());
         sintoma.setDescricaoSintoma(dto.descricaoSintoma());
-
-        List<Doenca> doencas = doencaRepository.findAllById(dto.idsDoencas());
-        sintoma.setDoencas(doencas);
 
         return sintoma;
     }

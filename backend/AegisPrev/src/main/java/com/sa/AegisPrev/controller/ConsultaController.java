@@ -33,12 +33,12 @@ public class ConsultaController {
     }
 
     @PutMapping("/{id}")
-    public ConsultaResponseDTO atualizar(@PathVariable Long id, @Valid @RequestBody ConsultaRequestDTO dto){
+    public ConsultaResponseDTO atualizar(@Valid @PathVariable Long id, @Valid @RequestBody ConsultaRequestDTO dto){
         return service.atualizar(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id){
+    public void deletar(@Valid @PathVariable Long id){
         service.deletar(id);
     }
 }

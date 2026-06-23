@@ -17,7 +17,7 @@ public class Sintoma {
     private String nomeSintoma;
     private String descricaoSintoma;
 
-    @ManyToMany
+    @ManyToMany (mappedBy = "sintomas")
     private List<Paciente> paciente;
 
     @ManyToMany

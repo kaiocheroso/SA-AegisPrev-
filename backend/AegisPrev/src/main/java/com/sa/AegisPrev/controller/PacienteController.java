@@ -27,7 +27,7 @@ public class PacienteController {
     }
 
     @GetMapping("/{idPaciente}")
-    public PacienteResponseDTO buscarPorId(@PathVariable Long idPaciente){
+    public PacienteResponseDTO buscarPorId(@Valid @PathVariable Long idPaciente){
         return service.buscarPorId(idPaciente);
     }
 
@@ -37,12 +37,12 @@ public class PacienteController {
     }
 
     @PutMapping("/{idPaciente}")
-    public PacienteResponseDTO atualizarPaciente(@PathVariable Long idPaciente, @RequestBody PacienteRequestDTO dto){
+    public PacienteResponseDTO atualizarPaciente(@Valid @PathVariable Long idPaciente, @Valid @RequestBody PacienteRequestDTO dto){
         return service.atualizarPaciente(idPaciente, dto);
     }
 
     @DeleteMapping("/{idPaciente}")
-    public void deletarPaciente(@PathVariable Long idPaciente){
+    public void deletarPaciente(@Valid @PathVariable Long idPaciente){
         service.deletar(idPaciente);
     }
 }

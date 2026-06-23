@@ -20,6 +20,11 @@ public class Doenca {
     private Boolean hereditaria;
 
     @ManyToMany
+    @JoinTable(
+            name = "doenca_sintoma",
+            joinColumns = @JoinColumn(name = "id_doenca"),
+            inverseJoinColumns = @JoinColumn(name = "id_sintoma")
+    )
     private List<Sintoma> sintomas;
 
     @ManyToMany

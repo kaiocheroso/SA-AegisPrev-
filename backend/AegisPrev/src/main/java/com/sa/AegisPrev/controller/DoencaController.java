@@ -3,6 +3,7 @@ package com.sa.AegisPrev.controller;
 import com.sa.AegisPrev.DTO.DoencaRequestDTO;
 import com.sa.AegisPrev.DTO.DoencaResponseDTO;
 import com.sa.AegisPrev.service.DoencaService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,22 +24,22 @@ public class DoencaController {
     }
 
     @GetMapping("/{id}")
-    public DoencaResponseDTO pegarId(@PathVariable Long id){
+    public DoencaResponseDTO pegarId(@Valid @PathVariable Long id){
         return service.pegarPorId(id);
     }
 
     @PostMapping
-    public DoencaResponseDTO salvar(@RequestBody DoencaRequestDTO dto) {
+    public DoencaResponseDTO salvar(@Valid @RequestBody DoencaRequestDTO dto) {
         return service.salvar(dto);
     }
 
     @PutMapping("/{id}")
-    public DoencaResponseDTO atualizar(@PathVariable Long id, @RequestBody DoencaRequestDTO dto) {
+    public DoencaResponseDTO atualizar(@Valid @PathVariable Long id, @Valid @RequestBody DoencaRequestDTO dto) {
         return service.atualizar(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public void deletar(@Valid @PathVariable Long id) {
         service.deletar(id);
     }
 }

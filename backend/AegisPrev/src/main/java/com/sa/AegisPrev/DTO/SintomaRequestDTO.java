@@ -10,9 +10,7 @@ public record SintomaRequestDTO (
          String nomeSintoma,
 
          @NotBlank(message = "O sitoma deve conter uma descricao")
-         String descricaoSintoma,
-
-        List<Long> idsDoencas
+         String descricaoSintoma
 
 ){
 }

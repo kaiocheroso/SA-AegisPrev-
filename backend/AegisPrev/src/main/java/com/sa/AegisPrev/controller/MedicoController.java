@@ -32,7 +32,7 @@ public class MedicoController {
 
     @Operation(summary = "Buscar medico por ID")
     @GetMapping("/{idMedico}")
-    public MedicoResponseDTO buscarPorId(@PathVariable Long idMedico){
+    public MedicoResponseDTO buscarPorId(@Valid @PathVariable Long idMedico){
         return medicoService.buscarPorId(idMedico);
     }
 
@@ -47,7 +47,7 @@ public class MedicoController {
     }
 
     @DeleteMapping("/{idMedico}")
-    public void deletar(@PathVariable Long idMedico){
+    public void deletar(@Valid @PathVariable Long idMedico){
         medicoService.deletar(idMedico);
     }
 }

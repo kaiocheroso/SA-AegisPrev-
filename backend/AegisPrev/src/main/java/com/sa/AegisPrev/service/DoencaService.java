@@ -5,7 +5,9 @@ import com.sa.AegisPrev.DTO.SintomaResumoDTO;
 import com.sa.AegisPrev.models.Doenca;
 import com.sa.AegisPrev.DTO.*;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
+import com.sa.AegisPrev.models.Sintoma;
 import com.sa.AegisPrev.repository.DoencaRepository;
+import com.sa.AegisPrev.repository.SintomaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +15,11 @@ import java.util.List;
 @Service
 public class DoencaService {
     private final DoencaRepository doencaRepository;
+    private final SintomaRepository sintomaRepository;
 
-    public DoencaService(DoencaRepository doencaRepository) {
+    public DoencaService(DoencaRepository doencaRepository, SintomaRepository sintomaRepository) {
         this.doencaRepository = doencaRepository;
+        this.sintomaRepository = sintomaRepository;
     }
 
     public DoencaResponseDTO toResponseDTO(Doenca doenca){
@@ -39,10 +43,15 @@ public class DoencaService {
     private Doenca toEntity(DoencaRequestDTO dto){
         Doenca doenca  = new Doenca();
 
-        doenca.setIdDoenca(dto.idDoenca());
         doenca.setDescricaoDoenca(dto.descricaoDoenca());
         doenca.setNomeDoenca(dto.nomeDoenca());
         doenca.setHereditaria(dto.hereditaria());
+
+        if (dto.idSintomas() != null){
+            List<Sintoma> sintomas = sintomaRepository.findAllById(dto.idSintomas());
+
+            doenca.setSintomas(sintomas);
+        }
 
         return doenca;
     }
@@ -60,10 +69,16 @@ public class DoencaService {
     public DoencaResponseDTO atualizar(Long IdDoenca, DoencaRequestDTO request){
         Doenca doencaExistente = buscarId(IdDoenca);
 
-        doencaExistente.setIdDoenca(request.idDoenca());
         doencaExistente.setDescricaoDoenca(request.descricaoDoenca());
         doencaExistente.setNomeDoenca(request.nomeDoenca());
         doencaExistente.setHereditaria(request.hereditaria());
+
+        if(request.idSintomas() != null){
+            List<Sintoma> sintomas =
+                    sintomaRepository.findAllById(request.idSintomas());
+
+            doencaExistente.setSintomas(sintomas);
+        }
 
         Doenca atualizado = doencaRepository.save(doencaExistente);
         return toResponseDTO(atualizado);
@@ -78,7 +93,7 @@ public class DoencaService {
 
         if (nomeDoenca != null){
             doencas = buscarNomeDoenca(nomeDoenca);
-        } else if (isHereditaria != false) {
+        } else if (Boolean.TRUE.equals(isHereditaria)) {
             doencas = buscarPorHereditaria();
         }else {
             doencas = doencaRepository.findAll();
