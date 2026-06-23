@@ -1,6 +1,6 @@
 package com.sa.AegisPrev.controller;
 
-import com.sa.AegisPrev.DTO.ConsultaRequest;
+import com.sa.AegisPrev.DTO.ConsultaRequestDTO;
 import com.sa.AegisPrev.DTO.ConsultaResponseDTO;
 import com.sa.AegisPrev.service.ConsultaService;
 import jakarta.validation.Valid;
@@ -28,12 +28,12 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public ConsultaResponseDTO cadastrar(@Valid @RequestBody ConsultaRequest dto){
+    public ConsultaResponseDTO cadastrar(@Valid @RequestBody ConsultaRequestDTO dto){
         return service.salvar(dto);
     }
 
     @PutMapping("/{id}")
-    public ConsultaResponseDTO atualizar(@PathVariable Long id, @Valid @RequestBody ConsultaRequest dto){
+    public ConsultaResponseDTO atualizar(@PathVariable Long id, @Valid @RequestBody ConsultaRequestDTO dto){
         return service.atualizar(id, dto);
     }
 

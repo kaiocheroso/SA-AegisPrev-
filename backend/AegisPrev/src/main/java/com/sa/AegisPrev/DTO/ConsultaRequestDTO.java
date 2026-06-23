@@ -5,7 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-public record ConsultaRequest(
+public record ConsultaRequestDTO(
         @NotNull(message = "O id medico nao pode estar vazio")
         Long idMedico,
         @NotNull(message = "O id paciente nao pode estar vazio")

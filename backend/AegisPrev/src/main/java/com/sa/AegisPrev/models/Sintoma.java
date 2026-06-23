@@ -19,4 +19,7 @@ public class Sintoma {
 
     @ManyToMany
     private List<Paciente> paciente;
+
+    @ManyToMany
+    private List<Doenca> doencas;
 }

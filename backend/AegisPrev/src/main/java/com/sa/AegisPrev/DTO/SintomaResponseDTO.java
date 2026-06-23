@@ -8,6 +8,7 @@ public record SintomaResponseDTO (
         Long idSintoma,
         String nomeSintoma,
         String descricaoSintoma,
-        List<PacienteResumoDTO> pacientes
+        List<PacienteResumoDTO> pacientes,
+        List<DoencaResumoDTO> doencas
 ){
 }

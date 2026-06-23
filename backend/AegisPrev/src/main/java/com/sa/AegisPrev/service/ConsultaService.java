@@ -64,7 +64,7 @@ public class ConsultaService {
         return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("ID não encontrado"));
     }
 
-    public ConsultaResponseDTO salvar(ConsultaRequest dto){
+    public ConsultaResponseDTO salvar(ConsultaRequestDTO dto){
         Medico medico = medicoRepository.findById(dto.idMedico()).orElseThrow(() -> new RecursoNaoEncontradoException("ID do medico nao encontrado"));
         Paciente paciente = pacienteRepository.findById(dto.idPaciente()).orElseThrow(() -> new RecursoNaoEncontradoException("ID do paciente nao encontrado"));
         Consulta consulta = new Consulta();
@@ -81,7 +81,7 @@ public class ConsultaService {
         return toResponse(salvo);
     }
 
-    public ConsultaResponseDTO atualizar(Long idConsulta, ConsultaRequest dto){
+    public ConsultaResponseDTO atualizar(Long idConsulta, ConsultaRequestDTO dto){
 
         Consulta consulta = pegarId(idConsulta);
 
