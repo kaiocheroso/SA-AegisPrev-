@@ -7,6 +7,8 @@ import com.sa.AegisPrev.repository.ConsultaRepository;
 import com.sa.AegisPrev.repository.DoencaRepository;
 import com.sa.AegisPrev.repository.MedicoRepository;
 import com.sa.AegisPrev.repository.PacienteRepository;
+import com.sa.AegisPrev.security.UserDetailsImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -52,12 +54,58 @@ public class ConsultaService {
         );
     }
 
-    public List<ConsultaResponseDTO> listar(){
-        return repository.findAll().stream().map(this::toResponse).toList();
+    private Usuario obterUsuarioLogado() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetailsImpl userDetails) {
+            return userDetails.getUsuario();
+        }
+
+        throw new RecursoNaoEncontradoException("Usuário não autenticado");
+    }
+
+    private void validarAcessoConsulta(Consulta consulta) {
+
+        Usuario usuario = obterUsuarioLogado();
+
+        if (usuario.getPapeis() == Papel.ROLE_ADMIN) {
+            return; // admin pode tudo
+        }
+
+        Medico medico = medicoRepository
+                .findByUsuarioIdUsuario(usuario.getIdUsuario())
+                .orElseThrow();
+
+        if (!consulta.getMedico().getIdMedico().equals(medico.getIdMedico())) {
+            throw new RecursoNaoEncontradoException("Acesso negado");
+        }
+    }
+
+    public List<ConsultaResponseDTO> listarTodasComoAdmin() {
+        return repository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<ConsultaResponseDTO> listarDoMedicoLogado() {
+
+        Usuario usuario = obterUsuarioLogado();
+
+        Medico medico = medicoRepository
+                .findByUsuarioIdUsuario(usuario.getIdUsuario())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Médico não encontrado"));
+
+        return repository.findByMedico(medico)
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     public ConsultaResponseDTO buscarPorId(Long id){
-        return toResponse(pegarId(id));
+        Consulta consulta = pegarId(id);
+        validarAcessoConsulta(consulta);
+        return toResponse(consulta);
     }
 
     private Consulta pegarId(Long id){
@@ -84,6 +132,7 @@ public class ConsultaService {
     public ConsultaResponseDTO atualizar(Long idConsulta, ConsultaRequestDTO dto){
 
         Consulta consulta = pegarId(idConsulta);
+        validarAcessoConsulta(consulta);
 
         Medico medico = medicoRepository.findById(dto.idMedico())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("ID do medico nao encontrado"));
@@ -104,6 +153,7 @@ public class ConsultaService {
 
     public void deletar(Long idConsulta){
         Consulta consulta = pegarId(idConsulta);
+        validarAcessoConsulta(consulta);
         repository.delete(consulta);
     }
 

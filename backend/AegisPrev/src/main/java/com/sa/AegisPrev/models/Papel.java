@@ -1,6 +1,6 @@
 package com.sa.AegisPrev.models;
 
 public enum Papel {
-    ADMIN,
-    MEDICO
+    ROLE_ADMIN,
+    ROLE_MEDICO
 }

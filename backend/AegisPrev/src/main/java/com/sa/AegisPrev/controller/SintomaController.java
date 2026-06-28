@@ -4,6 +4,7 @@ import com.sa.AegisPrev.DTO.SintomaRequestDTO;
 import com.sa.AegisPrev.DTO.SintomaResponseDTO;
 import com.sa.AegisPrev.service.SintomaService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/sintomas")
+@PreAuthorize("hasAnyRole('ADMIN', 'MEDICO')")
 public class SintomaController {
     private final SintomaService service;
 

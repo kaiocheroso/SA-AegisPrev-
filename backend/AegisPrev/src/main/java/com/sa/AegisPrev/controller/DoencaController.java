@@ -4,12 +4,14 @@ import com.sa.AegisPrev.DTO.DoencaRequestDTO;
 import com.sa.AegisPrev.DTO.DoencaResponseDTO;
 import com.sa.AegisPrev.service.DoencaService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/doencas")
+@PreAuthorize("hasAnyRole('ADMIN','MEDICO')")
 public class DoencaController {
 
     private final DoencaService service;

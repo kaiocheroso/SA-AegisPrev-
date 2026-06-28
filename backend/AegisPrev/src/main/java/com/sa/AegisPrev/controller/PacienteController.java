@@ -5,12 +5,14 @@ import com.sa.AegisPrev.DTO.PacienteResponseDTO;
 import com.sa.AegisPrev.service.PacienteService;
 import jakarta.validation.Valid;
 import lombok.Getter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/pacientes")
+@PreAuthorize("hasAnyRole('ADMIN','MEDICO')")
 public class PacienteController {
     private final PacienteService service;
 

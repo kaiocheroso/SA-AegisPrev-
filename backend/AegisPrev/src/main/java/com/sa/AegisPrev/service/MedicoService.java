@@ -7,6 +7,8 @@ import com.sa.AegisPrev.models.Paciente;
 import com.sa.AegisPrev.models.Papel;
 import com.sa.AegisPrev.models.Usuario;
 import com.sa.AegisPrev.repository.MedicoRepository;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +18,11 @@ public class MedicoService {
     //Dica do dia, se estiver funcionando, NÃO MEXA
 
     private final MedicoRepository medicoRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public MedicoService(MedicoRepository medicoRepository) {
+    public MedicoService(MedicoRepository medicoRepository, PasswordEncoder passwordEncoder) {
         this.medicoRepository = medicoRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private MedicoResponseDTO toResponseDTO(Medico medico) {
@@ -43,8 +47,8 @@ public class MedicoService {
     private Medico toEntity(MedicoRequestDTO dto){
         Usuario usuario = new Usuario();
         usuario.setEmail(dto.email());
-        usuario.setPassword(dto.password());
-        usuario.setPapeis(Papel.MEDICO);
+        usuario.setPassword(passwordEncoder.encode(dto.password()));
+        usuario.setPapeis(Papel.ROLE_MEDICO);
 
         Medico medico = new Medico();
 
@@ -54,6 +58,19 @@ public class MedicoService {
 
         medico.setUsuario(usuario);
         return medico;
+    }
+
+    private void validarAcessoMedico(Medico medico) {
+
+        Usuario usuario = UsuarioService.obterUsuarioLogado();
+
+        if (usuario.getPapeis() == Papel.ROLE_ADMIN) {
+            return;
+        }
+
+        if (!medico.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
+            throw new AccessDeniedException("Acesso negado");
+        }
     }
 
     public List<MedicoResponseDTO> listar(String email, String nome) {
@@ -71,7 +88,9 @@ public class MedicoService {
     }
 
     public MedicoResponseDTO buscarPorId(Long idMedico){
-        return toResponseDTO(buscarId(idMedico));
+        Medico medico = buscarId(idMedico);
+        validarAcessoMedico(medico);
+        return toResponseDTO(medico);
     }
 
     public Medico buscarId(Long idMedico){
@@ -99,6 +118,8 @@ public class MedicoService {
         //iremos criar um mwetodo apenas para atualiazr a roles do medico.
         Medico medicoExistente = buscarId(idMedico);
 
+        validarAcessoMedico(medicoExistente);
+
         medicoExistente.setNome(request.nome());
         medicoExistente.setSexo(request.sexo());
         medicoExistente.setIdade(request.idade());
@@ -109,7 +130,7 @@ public class MedicoService {
 
 
     public void deletar(Long idMedico){
-        Medico medico = medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID nao encontrado"));
+        Medico medico = buscarId(idMedico);
         medicoRepository.delete(medico);
     }
 
