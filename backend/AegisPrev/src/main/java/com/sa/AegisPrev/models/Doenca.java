@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,11 +26,11 @@ public class Doenca {
             joinColumns = @JoinColumn(name = "id_doenca"),
             inverseJoinColumns = @JoinColumn(name = "id_sintoma")
     )
-    private List<Sintoma> sintomas;
+    private List<Sintoma> sintomas = new ArrayList<>();
 
     @ManyToMany
-    private List<Paciente> pacientes;
+    private List<Paciente> pacientes = new ArrayList<>();
 
     @ManyToMany
-    private List<Consulta> consultas;
+    private List<Consulta> consultas = new ArrayList<>();
 }

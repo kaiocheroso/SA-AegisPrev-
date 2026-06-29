@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,13 +26,13 @@ public class Paciente {
             joinColumns = @JoinColumn(name = "paciente_id"),
             inverseJoinColumns = @JoinColumn(name = "sintoma_id")
     )
-    private List<Sintoma> sintomas;
+    private List<Sintoma> sintomas = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "pacientes_doenca")
-    private List<Doenca> doencas;
+    private List<Doenca> doencas = new ArrayList<>();
 
     @OneToMany
-    private List<Consulta> consultas;
+    private List<Consulta> consultas = new ArrayList<>();
     
 }
