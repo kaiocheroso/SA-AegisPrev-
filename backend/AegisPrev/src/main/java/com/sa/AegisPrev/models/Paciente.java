@@ -21,18 +21,7 @@ public class Paciente {
 
     private LocalDate dataNascimento;
 
-    @ManyToMany
-    @JoinTable(name = "paciente_sintomas",
-            joinColumns = @JoinColumn(name = "paciente_id"),
-            inverseJoinColumns = @JoinColumn(name = "sintoma_id")
-    )
-    private List<Sintoma> sintomas = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(name = "pacientes_doenca")
-    private List<Doenca> doencas = new ArrayList<>();
-
-    @OneToMany
+    @OneToMany(mappedBy = "paciente")
     private List<Consulta> consultas = new ArrayList<>();
     
 }

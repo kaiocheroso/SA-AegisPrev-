@@ -8,8 +8,6 @@ public record PacienteResponseDTO (
         String nomePaciente,
         String cpfPaciente,
         LocalDate dataNascimento,
-        List<SintomaResumoDTO> sintomas,
-        List<DoencaResumoDTO> doencas,
         List<ConsultaResumoDTO> consultas
 
 ){

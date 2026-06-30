@@ -39,7 +39,10 @@ public class MedicoService {
                                     consulta.getMedico().getIdMedico(),
                                     consulta.getPaciente().getIdPaciente(),
                                     consulta.getDataConsulta(),
-                                    consulta.getDescricao()
+                                    consulta.getDoencas().stream().map(doenca -> new DoencaResumoDTO(
+                                            doenca.getIdDoenca(),
+                                            doenca.getNomeDoenca()
+                                    )).toList()
                         )).toList()
         );
     }

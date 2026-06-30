@@ -27,6 +27,15 @@ public class Consulta {
     private String descricao;
 
     @ManyToMany
+    @JoinTable(
+            name = "consulta_sintoma",
+            joinColumns = @JoinColumn(name = "consulta_id"),
+            inverseJoinColumns = @JoinColumn(name = "sintoma_id")
+    )
+    private List<Sintoma> sintomas = new ArrayList<>();
+
+
+    @ManyToMany
     @JoinTable(name = "consulta_doenca",
             joinColumns = @JoinColumn(name = "consulta_id"),
             inverseJoinColumns = @JoinColumn(name = "doenca_id")

@@ -28,9 +28,6 @@ public class Doenca {
     )
     private List<Sintoma> sintomas = new ArrayList<>();
 
-    @ManyToMany
-    private List<Paciente> pacientes = new ArrayList<>();
-
-    @ManyToMany
+    @ManyToMany(mappedBy = "doencas")
     private List<Consulta> consultas = new ArrayList<>();
 }

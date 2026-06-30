@@ -16,8 +16,6 @@ public record PacienteRequestDTO (
         @CPF(message = "O CPF informado é inválido")
         String cpfPaciente,
         @DateTimeFormat(pattern = "dd/MM/yyyy")
-        LocalDate dataNascimento,
-        List<Long> idsSintomas,
-        List<Long> idsDoencas
+        LocalDate dataNascimento
 ){
 }

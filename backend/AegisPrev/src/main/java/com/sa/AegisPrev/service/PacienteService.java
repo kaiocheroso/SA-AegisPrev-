@@ -22,15 +22,9 @@ public class PacienteService {
     /// TENHA CERTEZA ABSOLUTA DO QUE MUDAR
 
     private final PacienteRepository pacienteRepository;
-    private final MedicoRepository medicoRepository;
-    private final SintomaRepository sintomaRepository;
-    private final DoencaRepository doencaRepository;
 
-    public PacienteService(PacienteRepository pacienteRepository, MedicoRepository medicoRepository, SintomaRepository sintomaRepository, DoencaRepository doencaRepository) {
+    public PacienteService(PacienteRepository pacienteRepository) {
         this.pacienteRepository = pacienteRepository;
-        this.medicoRepository = medicoRepository;
-        this.sintomaRepository = sintomaRepository;
-        this.doencaRepository = doencaRepository;
     }
 
     private PacienteResponseDTO toResponseDTO(Paciente paciente){
@@ -39,41 +33,23 @@ public class PacienteService {
                 paciente.getNomePaciente(),
                 paciente.getCpfPaciente(),
                 paciente.getDataNascimento(),
-                paciente.getSintomas().stream().map(sintoma -> new SintomaResumoDTO(
-                        sintoma.getIdSintoma(),
-                        sintoma.getNomeSintoma()
-                )).toList(),
-                paciente.getDoencas().stream().map(doenca -> new DoencaResumoDTO(
-                        doenca.getIdDoenca(),
-                        doenca.getNomeDoenca()
-                )).toList(),
                 paciente.getConsultas().stream().map(consulta -> new ConsultaResumoDTO(
                         consulta.getIdConsulta(),
                         consulta.getMedico().getIdMedico(),
                         consulta.getPaciente().getIdPaciente(),
                         consulta.getDataConsulta(),
-                        consulta.getDescricao()
+                        consulta.getDoencas().stream().map(doenca -> new DoencaResumoDTO(
+                                doenca.getIdDoenca(),
+                                doenca.getNomeDoenca()
+                        )).toList()
                 )).toList()
         );
     }
-
     private Paciente toEntity(PacienteRequestDTO dto){
         Paciente paciente = new Paciente();
         paciente.setNomePaciente(dto.nomePaciente());
         paciente.setCpfPaciente(dto.cpfPaciente());
         paciente.setDataNascimento(dto.dataNascimento());
-
-        if (dto.idsSintomas() != null && !dto.idsSintomas().isEmpty()) {
-            paciente.setSintomas(
-                    sintomaRepository.findAllById(dto.idsSintomas())
-            );
-        }
-
-        if (dto.idsDoencas() != null && !dto.idsDoencas().isEmpty()) {
-            paciente.setDoencas(
-                    doencaRepository.findAllById(dto.idsDoencas())
-            );
-        }
 
         return paciente;
     }
@@ -136,18 +112,6 @@ public class PacienteService {
         pacienteExistente.setNomePaciente(dto.nomePaciente());
         pacienteExistente.setCpfPaciente(dto.cpfPaciente());
         pacienteExistente.setDataNascimento(dto.dataNascimento());
-
-        if (dto.idsSintomas() != null) {
-            pacienteExistente.setSintomas(
-                    sintomaRepository.findAllById(dto.idsSintomas())
-            );
-        }
-
-        if (dto.idsDoencas() != null) {
-            pacienteExistente.setDoencas(
-                    doencaRepository.findAllById(dto.idsDoencas())
-            );
-        }
 
         Paciente atualizado = pacienteRepository.save(pacienteExistente);
 

@@ -18,8 +18,8 @@ public class Sintoma {
     private String nomeSintoma;
     private String descricaoSintoma;
 
-    @ManyToMany (mappedBy = "sintomas")
-    private List<Paciente> paciente = new ArrayList<>();
+    @ManyToMany(mappedBy = "sintomas")
+    private List<Consulta> consultas = new ArrayList<>();
 
     @ManyToMany
     private List<Doenca> doencas = new ArrayList<>();

@@ -16,20 +16,11 @@ public class SintomaService {
         this.repository = repository;
     }
 
-    private SintomaResponseDTO toResponse(Sintoma sintoma){
+    private SintomaResponseDTO toResponse(Sintoma sintoma) {
         return new SintomaResponseDTO(
                 sintoma.getIdSintoma(),
                 sintoma.getNomeSintoma(),
-                sintoma.getDescricaoSintoma(),
-                sintoma.getPaciente().stream().map(paciente -> new PacienteResumoDTO(
-                        paciente.getIdPaciente(),
-                        paciente.getNomePaciente(),
-                        paciente.getCpfPaciente()
-                )).toList(),
-                sintoma.getDoencas().stream().map(doenca -> new DoencaResumoDTO(
-                        doenca.getIdDoenca(),
-                        doenca.getNomeDoenca()
-                )).toList()
+                sintoma.getDescricaoSintoma()
         );
     }
 

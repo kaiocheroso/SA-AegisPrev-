@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ConsultaRequestDTO(
         @NotNull(message = "O id medico nao pode estar vazio")
@@ -13,5 +14,7 @@ public record ConsultaRequestDTO(
         @DateTimeFormat(pattern = "dd/MM/yyyy")
         LocalDateTime dataConsulta,
         @NotBlank(message = "Não pode estar vazio")
-        String descricao
+        String descricao,
+        List<Long> sintomasIds,
+        List<Long> doencasIds
 ) {}

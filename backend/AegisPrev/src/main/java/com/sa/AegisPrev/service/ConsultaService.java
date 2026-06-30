@@ -3,10 +3,7 @@ package com.sa.AegisPrev.service;
 import com.sa.AegisPrev.DTO.*;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
 import com.sa.AegisPrev.models.*;
-import com.sa.AegisPrev.repository.ConsultaRepository;
-import com.sa.AegisPrev.repository.DoencaRepository;
-import com.sa.AegisPrev.repository.MedicoRepository;
-import com.sa.AegisPrev.repository.PacienteRepository;
+import com.sa.AegisPrev.repository.*;
 import com.sa.AegisPrev.security.UserDetailsImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,13 +20,14 @@ public class ConsultaService {
     private final MedicoRepository medicoRepository;
     private final PacienteRepository pacienteRepository;
     private final DoencaRepository doencaRepository;
+    private final SintomaRepository sintomaRepository;
 
-
-    public ConsultaService(ConsultaRepository repository, MedicoRepository medicoRepository, PacienteRepository pacienteRepository, DoencaRepository doencaRepository) {
+    public ConsultaService(ConsultaRepository repository, MedicoRepository medicoRepository, PacienteRepository pacienteRepository, DoencaRepository doencaRepository, SintomaRepository sintomaRepository) {
         this.repository = repository;
         this.medicoRepository = medicoRepository;
         this.pacienteRepository = pacienteRepository;
         this.doencaRepository = doencaRepository;
+        this.sintomaRepository = sintomaRepository;
     }
 
     private ConsultaResponseDTO toResponse(Consulta consulta){
@@ -46,11 +44,17 @@ public class ConsultaService {
                 ),
                 consulta.getDataConsulta(),
                 consulta.getDescricao(),
+                consulta.getSintomas().stream().map(sintoma -> new SintomaResumoDTO(
+                        sintoma.getIdSintoma(),
+                        sintoma.getNomeSintoma()
+                )).toList(),
+
                 consulta.getDoencas().stream().map(doenca -> new DoencaResumoDTO(
                         doenca.getIdDoenca(),
                         doenca.getNomeDoenca()
                 )).toList(),
-                calcularPrevisoes(consulta.getPaciente())
+
+                calcularPrevisoes(consulta)
         );
     }
 
@@ -122,7 +126,13 @@ public class ConsultaService {
         consulta.setDataConsulta(LocalDateTime.now()); //talvez tenha que apagar o date do consultaRequest
         consulta.setDescricao(dto.descricao());
 
-        List<Doenca> previsoes = preverDoencas(paciente);
+        if (dto.sintomasIds() != null && !dto.sintomasIds().isEmpty()) {
+            consulta.setSintomas(
+                    sintomaRepository.findAllById(dto.sintomasIds())
+            );
+        }
+
+        List<Doenca> previsoes = preverDoencas(consulta);
         consulta.setDoencas(previsoes);
 
         Consulta salvo = repository.save(consulta);
@@ -144,7 +154,13 @@ public class ConsultaService {
         consulta.setPaciente(paciente);
         consulta.setDescricao(dto.descricao());
 
-        consulta.setDoencas(preverDoencas(paciente));
+        if (dto.sintomasIds() != null) {
+            consulta.setSintomas(
+                    sintomaRepository.findAllById(dto.sintomasIds())
+            );
+        }
+
+        consulta.setDoencas(preverDoencas(consulta));
 
         Consulta atualizada = repository.save(consulta);
 
@@ -157,23 +173,23 @@ public class ConsultaService {
         repository.delete(consulta);
     }
 
-    private List<Doenca> preverDoencas(Paciente paciente){
+    private List<Doenca> preverDoencas(Consulta consulta){
 
-        List<Sintoma> sintomasPaciente = paciente.getSintomas();
+        List<Sintoma> sintomasConsulta = consulta.getSintomas();
 
         return doencaRepository.findAll()
                 .stream()
                 .filter(doenca ->
                         doenca.getSintomas()
                                 .stream()
-                                .anyMatch(sintomasPaciente::contains)
+                                .anyMatch(sintomasConsulta::contains)
                 )
                 .toList();
     }
 
-    private List<DoencaPrevistaDTO> calcularPrevisoes(Paciente paciente){
+    private List<DoencaPrevistaDTO> calcularPrevisoes(Consulta consulta){
 
-        List<Sintoma> sintomasPaciente = paciente.getSintomas();
+        List<Sintoma> sintomasConsulta = consulta.getSintomas();
 
         return doencaRepository.findAll()
                 .stream()
@@ -181,14 +197,14 @@ public class ConsultaService {
 
                     long coincidencias = doenca.getSintomas()
                             .stream()
-                            .filter(sintomasPaciente::contains)
+                            .filter(sintomasConsulta::contains)
                             .count();
 
                     double compatibilidade = 0;
 
-                    if (!sintomasPaciente.isEmpty()) {
+                    if (!sintomasConsulta.isEmpty()) {
                         compatibilidade =
-                                ((double) coincidencias / sintomasPaciente.size()) * 100;
+                                ((double) coincidencias / sintomasConsulta.size()) * 100;
                     }
 
                     return new DoencaPrevistaDTO(

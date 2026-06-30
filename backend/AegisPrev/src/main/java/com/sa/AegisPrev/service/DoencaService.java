@@ -47,10 +47,8 @@ public class DoencaService {
         doenca.setNomeDoenca(dto.nomeDoenca());
         doenca.setHereditaria(dto.hereditaria());
 
-        if (dto.idSintomas() != null){
-            List<Sintoma> sintomas = sintomaRepository.findAllById(dto.idSintomas());
-
-            doenca.setSintomas(sintomas);
+        if (dto.idSintomas() != null && !dto.idSintomas().isEmpty()) {
+            doenca.setSintomas(sintomaRepository.findAllById(dto.idSintomas()));
         }
 
         return doenca;
@@ -73,11 +71,10 @@ public class DoencaService {
         doencaExistente.setNomeDoenca(request.nomeDoenca());
         doencaExistente.setHereditaria(request.hereditaria());
 
-        if(request.idSintomas() != null){
-            List<Sintoma> sintomas =
-                    sintomaRepository.findAllById(request.idSintomas());
-
-            doencaExistente.setSintomas(sintomas);
+        if (request.idSintomas() != null && !request.idSintomas().isEmpty()) {
+            doencaExistente.setSintomas(
+                    sintomaRepository.findAllById(request.idSintomas())
+            );
         }
 
         Doenca atualizado = doencaRepository.save(doencaExistente);
