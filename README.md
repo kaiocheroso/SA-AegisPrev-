@@ -34,7 +34,7 @@ O ecossistema do projeto foi planejado com as seguintes tecnologias para o desen
 * ![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white) - Linguagem base para o ecossistema backend.
 * ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=Spring+Boot&logoColor=white) - Framework principal para a construção da API REST.
 * ![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D) - Framework progressivo para o desenvolvimento da interface do usuário (frontend).
-* ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white) - Banco de dados relacional para persistência dos dados.
+* ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) - Banco de dados relacional para persistência dos dados.
 
 ---
 
