@@ -6,6 +6,7 @@ import com.sa.AegisPrev.service.PacienteService;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,10 @@ public class PacienteController {
             @RequestParam(required = false) String nomePaciente,
             @RequestParam(required = false) String cpfPaciente
     ){
+
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+
         return service.listar(nomePaciente, cpfPaciente);
     }
 

@@ -6,8 +6,10 @@ import com.sa.AegisPrev.models.Medico;
 import com.sa.AegisPrev.models.Paciente;
 import com.sa.AegisPrev.models.Papel;
 import com.sa.AegisPrev.models.Usuario;
+import com.sa.AegisPrev.repository.DoencaRepository;
 import com.sa.AegisPrev.repository.MedicoRepository;
 import com.sa.AegisPrev.repository.PacienteRepository;
+import com.sa.AegisPrev.repository.SintomaRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +23,14 @@ public class PacienteService {
 
     private final PacienteRepository pacienteRepository;
     private final MedicoRepository medicoRepository;
+    private final SintomaRepository sintomaRepository;
+    private final DoencaRepository doencaRepository;
 
-    public PacienteService(PacienteRepository pacienteRepository, MedicoRepository medicoRepository) {
+    public PacienteService(PacienteRepository pacienteRepository, MedicoRepository medicoRepository, SintomaRepository sintomaRepository, DoencaRepository doencaRepository) {
         this.pacienteRepository = pacienteRepository;
         this.medicoRepository = medicoRepository;
+        this.sintomaRepository = sintomaRepository;
+        this.doencaRepository = doencaRepository;
     }
 
     private PacienteResponseDTO toResponseDTO(Paciente paciente){
@@ -52,14 +58,25 @@ public class PacienteService {
     }
 
     private Paciente toEntity(PacienteRequestDTO dto){
-            Paciente paciente = new Paciente();
-            paciente.setNomePaciente(dto.nomePaciente());
-            paciente.setCpfPaciente(dto.cpfPaciente());
-            paciente.setDataNascimento(dto.dataNascimento());
+        Paciente paciente = new Paciente();
+        paciente.setNomePaciente(dto.nomePaciente());
+        paciente.setCpfPaciente(dto.cpfPaciente());
+        paciente.setDataNascimento(dto.dataNascimento());
 
-            return paciente;
+        if (dto.idsSintomas() != null && !dto.idsSintomas().isEmpty()) {
+            paciente.setSintomas(
+                    sintomaRepository.findAllById(dto.idsSintomas())
+            );
+        }
+
+        if (dto.idsDoencas() != null && !dto.idsDoencas().isEmpty()) {
+            paciente.setDoencas(
+                    doencaRepository.findAllById(dto.idsDoencas())
+            );
+        }
+
+        return paciente;
     }
-
     /*private void validarAcessoPaciente(Paciente paciente) {
 
         Usuario usuario = obterUsuarioLogado();
@@ -119,6 +136,18 @@ public class PacienteService {
         pacienteExistente.setNomePaciente(dto.nomePaciente());
         pacienteExistente.setCpfPaciente(dto.cpfPaciente());
         pacienteExistente.setDataNascimento(dto.dataNascimento());
+
+        if (dto.idsSintomas() != null) {
+            pacienteExistente.setSintomas(
+                    sintomaRepository.findAllById(dto.idsSintomas())
+            );
+        }
+
+        if (dto.idsDoencas() != null) {
+            pacienteExistente.setDoencas(
+                    doencaRepository.findAllById(dto.idsDoencas())
+            );
+        }
 
         Paciente atualizado = pacienteRepository.save(pacienteExistente);
 
