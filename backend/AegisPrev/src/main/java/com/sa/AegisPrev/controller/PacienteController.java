@@ -26,10 +26,6 @@ public class PacienteController {
             @RequestParam(required = false) String nomePaciente,
             @RequestParam(required = false) String cpfPaciente
     ){
-
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-
         return service.listar(nomePaciente, cpfPaciente);
     }
 

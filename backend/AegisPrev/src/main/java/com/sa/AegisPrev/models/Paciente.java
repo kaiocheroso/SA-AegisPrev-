@@ -17,6 +17,7 @@ public class Paciente {
     private Long idPaciente;
 
     private String nomePaciente;
+    @Column(unique = true, nullable = false)
     private String cpfPaciente;
 
     private LocalDate dataNascimento;

@@ -1,21 +1,13 @@
 package com.sa.AegisPrev.service;
 
 import com.sa.AegisPrev.DTO.*;
+import com.sa.AegisPrev.exception.RecursoExistente;
 import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
-import com.sa.AegisPrev.models.Medico;
 import com.sa.AegisPrev.models.Paciente;
-import com.sa.AegisPrev.models.Papel;
-import com.sa.AegisPrev.models.Usuario;
-import com.sa.AegisPrev.repository.DoencaRepository;
-import com.sa.AegisPrev.repository.MedicoRepository;
 import com.sa.AegisPrev.repository.PacienteRepository;
-import com.sa.AegisPrev.repository.SintomaRepository;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static com.sa.AegisPrev.service.UsuarioService.obterUsuarioLogado;
 
 @Service
 public class PacienteService {
@@ -91,7 +83,7 @@ public class PacienteService {
     }
 
     private Paciente buscarPorCpf(String cpfPaciente){
-        return pacienteRepository.findByCpfPacienteContainingIgnoreCase(cpfPaciente).orElseThrow(() -> new RecursoNaoEncontradoException("CPF nao encontrado"));
+        return pacienteRepository.findByCpfPaciente(cpfPaciente).orElseThrow(() -> new RecursoNaoEncontradoException("CPF nao encontrado"));
     }
 
     public PacienteResponseDTO buscarPorId(Long idPaciente){
@@ -101,6 +93,10 @@ public class PacienteService {
     }
 
     public PacienteResponseDTO cadastrarPaciente(PacienteRequestDTO dto){
+        if (pacienteRepository.existsByCpfPaciente(dto.cpfPaciente())){
+            throw new RecursoExistente("CPF já cadastrado");
+        }
+
         Paciente paciente = toEntity(dto);
         Paciente salvo = pacienteRepository.save(paciente);
         return toResponseDTO(salvo);

@@ -11,10 +11,7 @@ public record ConsultaRequestDTO(
         Long idMedico,
         @NotNull(message = "O id paciente nao pode estar vazio")
         Long idPaciente,
-        @DateTimeFormat(pattern = "dd/MM/yyyy")
-        LocalDateTime dataConsulta,
         @NotBlank(message = "Não pode estar vazio")
         String descricao,
-        List<Long> sintomasIds,
-        List<Long> doencasIds
+        List<Long> sintomasIds
 ) {}

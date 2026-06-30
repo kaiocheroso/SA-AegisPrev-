@@ -11,7 +11,9 @@ import java.util.Optional;
 public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     List<Paciente> findByNomePacienteContainingIgnoreCase (String nomePaciente);
 
-    Optional<Paciente> findByCpfPacienteContainingIgnoreCase (String cpfPaciente);
+    Optional<Paciente> findByCpfPaciente (String cpfPaciente);
 
     List<Paciente> findByDataNascimento (LocalDate dataNascimento);
+
+    boolean existsByCpfPaciente(String cpfPaciente);
 }
