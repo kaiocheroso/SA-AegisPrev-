@@ -1,11 +1,14 @@
 package com.sa.AegisPrev.DTO;
 
-public record PacienteResponseDTO (
+import java.time.LocalDate;
+import java.util.List;
 
-         Long idUsuario,
-         String nome,
-         String cpf
-         
+public record PacienteResponseDTO (
+        Long idPaciente,
+        String nomePaciente,
+        String cpfPaciente,
+        LocalDate dataNascimento,
+        List<ConsultaResumoDTO> consultas
 
 ){
 }

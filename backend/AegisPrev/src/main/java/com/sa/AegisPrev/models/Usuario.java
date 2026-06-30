@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -18,4 +20,5 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Papel papeis;
 
+    private LocalDateTime adminDate; //Data de até quando é ADMIN
 }

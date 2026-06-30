@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,21 +17,12 @@ public class Paciente {
     private Long idPaciente;
 
     private String nomePaciente;
+    @Column(unique = true, nullable = false)
     private String cpfPaciente;
 
     private LocalDate dataNascimento;
 
-    @ManyToMany
-    @JoinTable(name = "paciente_sintomas",
-            joinColumns = @JoinColumn(name = "paciente_id"),
-            inverseJoinColumns = @JoinColumn(name = "sintoma_id")
-    )
-    private List<Sintoma> sintomas;
-
     @OneToMany(mappedBy = "paciente")
-    private List<RelacionamentoFamiliar> familiares;
-
-    @OneToMany
-    private List<Consulta> consultas;
+    private List<Consulta> consultas = new ArrayList<>();
     
 }

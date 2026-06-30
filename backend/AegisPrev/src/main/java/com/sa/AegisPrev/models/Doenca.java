@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,8 +21,13 @@ public class Doenca {
     private Boolean hereditaria;
 
     @ManyToMany
-    private List<Sintoma> sintomas;
+    @JoinTable(
+            name = "doenca_sintoma",
+            joinColumns = @JoinColumn(name = "id_doenca"),
+            inverseJoinColumns = @JoinColumn(name = "id_sintoma")
+    )
+    private List<Sintoma> sintomas = new ArrayList<>();
 
-    @ManyToMany
-    private List<Consulta> consultas;
+    @ManyToMany(mappedBy = "doencas")
+    private List<Consulta> consultas = new ArrayList<>();
 }

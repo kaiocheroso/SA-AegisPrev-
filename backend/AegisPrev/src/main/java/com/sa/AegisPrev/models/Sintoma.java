@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,6 +18,9 @@ public class Sintoma {
     private String nomeSintoma;
     private String descricaoSintoma;
 
+    @ManyToMany(mappedBy = "sintomas")
+    private List<Consulta> consultas = new ArrayList<>();
+
     @ManyToMany
-    private List<Paciente> paciente;
+    private List<Doenca> doencas = new ArrayList<>();
 }

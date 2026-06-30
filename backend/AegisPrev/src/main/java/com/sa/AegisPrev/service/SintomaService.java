@@ -1,0 +1,71 @@
+package com.sa.AegisPrev.service;
+
+import com.sa.AegisPrev.DTO.*;
+import com.sa.AegisPrev.exception.RecursoNaoEncontradoException;
+import com.sa.AegisPrev.models.Sintoma;
+import com.sa.AegisPrev.repository.SintomaRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class SintomaService {
+    private final SintomaRepository repository;
+
+    public SintomaService(SintomaRepository repository) {
+        this.repository = repository;
+    }
+
+    private SintomaResponseDTO toResponse(Sintoma sintoma) {
+        return new SintomaResponseDTO(
+                sintoma.getIdSintoma(),
+                sintoma.getNomeSintoma(),
+                sintoma.getDescricaoSintoma()
+        );
+    }
+
+    private Sintoma toEntity(SintomaRequestDTO dto){
+        Sintoma sintoma = new Sintoma();
+
+        sintoma.setNomeSintoma(dto.nomeSintoma());
+        sintoma.setDescricaoSintoma(dto.descricaoSintoma());
+
+        return sintoma;
+    }
+
+    public List<SintomaResponseDTO> listar(){
+        return repository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    public SintomaResponseDTO buscarPorId(Long id){
+        return toResponse(pegarId(id));
+    }
+
+    public SintomaResponseDTO cadastrar(SintomaRequestDTO dto){
+        Sintoma sintoma = toEntity(dto);
+        Sintoma salvo = repository.save(sintoma);
+        return toResponse(salvo);
+    }
+
+    public SintomaResponseDTO atualizar(Long id, SintomaRequestDTO dto){
+        Sintoma sintomaExistente = pegarId(id);
+
+        sintomaExistente.setNomeSintoma(dto.nomeSintoma());
+        sintomaExistente.setDescricaoSintoma(dto.descricaoSintoma());
+
+        Sintoma salvo = repository.save(sintomaExistente);
+        return toResponse(salvo);
+    }
+
+    public void deletar(Long id){
+        Sintoma sintoma = pegarId(id);
+        repository.delete(sintoma);
+    }
+
+
+    private Sintoma pegarId(Long id){
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("ID do sintoma nao encontrado"));
+    }
+
+
+}

@@ -15,12 +15,9 @@ public record MedicoRequestDTO (
         @NotNull(message = "nao pode ser nula")
         Integer idade,
 
-        @Email
-        @NotBlank(message = "O medico deve conter um nome")
+        @NotBlank(message = "Email nao pode estar vazio")
         String email,
-
-        @NotBlank(message = " O medico deve conter uma senha")
+        @NotBlank(message = "Senha nao pode estar vazio")
         String password
-
 ){
 }
