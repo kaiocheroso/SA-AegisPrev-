@@ -49,7 +49,7 @@
               @input="formatarCPF"
               type="text"
               placeholder="000.000.000-00"
-              class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+              class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none"
             />
           </div>
 
@@ -61,7 +61,7 @@
             <input
               v-model="form.pacienteDataNascimento"
               type="date"
-              class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+              class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none"
             />
           </div>
         </div>
@@ -75,7 +75,7 @@
             <input
               v-model="form.dataConsulta"
               type="date"
-              class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none"
             />
           </div>
 
@@ -87,9 +87,33 @@
             <input
               v-model="form.horario"
               type="time"
-              class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+              class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none"
             />
           </div>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">
+            Sintomas
+          </label>
+
+          <select
+            v-model="form.sintomas"
+            multiple
+            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none h-40"
+          >
+            <option
+              v-for="sintoma in sintomas"
+              :key="sintoma.id"
+              :value="sintoma.id"
+            >
+              {{ sintoma.nome }}
+            </option>
+          </select>
+
+          <p class="text-sm text-gray-500 mt-1">
+            Segure Ctrl (Windows) ou Command (Mac) para selecionar vários
+            sintomas.
+          </p>
         </div>
 
         <div>
@@ -98,10 +122,10 @@
           </label>
 
           <textarea
-            v-model="form.observacao"
+            v-model="form.descriçao"
             rows="4"
             placeholder="Digite informações adicionais..."
-            class="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+            class="w-full px-4 py-2 border rounded-lg resize-none focus:ring-2 focus:ring-cyan-500 focus:outline-none"
           ></textarea>
         </div>
 
@@ -109,6 +133,7 @@
           <RouterLink to="/home">
             <button
               type="button"
+              @click="router.push('/home')"
               class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
             >
               Voltar
@@ -131,7 +156,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { postConsulta } from "../services/api";
-import type { Consulta } from "@/interfaces/Consultas";
+import type { Consulta } from "@/interfaces/Consulta";
 
 const router = useRouter();
 
@@ -145,11 +170,26 @@ async function cadastrarConsulta() {
     pacienteDataNascimento: form.value.pacienteDataNascimento,
     dataConsulta: form.value.dataConsulta,
     horario: form.value.horario,
-    observacao: form.value.observacao,
+    descriçao: form.value.descriçao,
+    sintomas: form.value.sintomas,
   });
 
   router.push("/home");
 }
+interface Sintoma {
+  id: number;
+  nome: string;
+}
+
+const sintomas = ref<Sintoma[]>([
+  { id: 1, nome: "Febre" },
+  { id: 2, nome: "Tosse" },
+  { id: 3, nome: "Dor de cabeça" },
+  { id: 4, nome: "Dor de garganta" },
+  { id: 5, nome: "Falta de ar" },
+  { id: 6, nome: "Náusea" },
+  { id: 7, nome: "Vômito" },
+]);
 
 function formatarCPF(event: Event): void {
   const input = event.target as HTMLInputElement;

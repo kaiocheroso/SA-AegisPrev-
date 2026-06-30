@@ -29,11 +29,7 @@ const router = createRouter({
       name: "historico",
       component: () => import("../views/HistoricoView.vue"),
     },
-    {
-      path: "/Pacientes",
-      name: "Pacientes",
-      component: () => import("../views/PacientesView.vue"),
-    },
+
     {
       path: "/Consulta",
       name: "Consulta",
@@ -43,6 +39,16 @@ const router = createRouter({
       path: "/Entrar",
       name: "Entrar",
       component: () => import("../views/EntrarView.vue"),
+    },
+    {
+      path: "/Consultas",
+      name: "Consultas",
+      component: () => import("@/views/ListaConsultasView.vue"),
+    },
+    {
+      path: "/editar/:id",
+      name: "EditarPaciente",
+      component: () => import("@/views/EditarPacienteView.vue"),
     },
   ],
 });
