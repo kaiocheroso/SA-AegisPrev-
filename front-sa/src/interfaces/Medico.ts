@@ -1,8 +1,8 @@
-export interface Usuario {
+export interface Medico {
   id: Number;
   nome: string;
-  email: string;
-  senha: string;
   sexo: string;
   idade: Number;
+  email: string;
+  password: string;
 }

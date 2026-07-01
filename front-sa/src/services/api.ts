@@ -1,10 +1,10 @@
 import axios from "axios";
-import type { Usuario } from "../interfaces/Usuario";
+import type { Medico } from "../interfaces/Medico";
 import type { Pacientes } from "../interfaces/Pacientes";
 import type { Consulta } from "../interfaces/Consulta";
 
 const api = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: "http://localhost:8080",
 });
 
 export async function getPacientes() {
@@ -15,8 +15,13 @@ export async function getPacientesById(id: string | number) {
   const response = await api.get(`/Pacientes/${id}`);
   return response.data;
 }
-export async function postUsuario(usuario: Omit<Usuario, "id">) {
-  await api.post<Usuario>("/Usuario", usuario);
+export async function postMedico(medico: Omit<Medico, "id">) {
+  await api.post<Medico>("/medicos", medico);
+}
+
+export async function loginAuth(auth: { email: string; password: string }) {
+  const response = await api.post("/auth/login", auth);
+  return response.data;
 }
 
 export async function postPacientes(pacientes: Omit<Pacientes, "id">) {

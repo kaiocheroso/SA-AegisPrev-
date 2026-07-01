@@ -7,6 +7,7 @@ const router = createRouter({
       path: "/home",
       name: "home",
       component: () => import("../views/HomeView.vue"),
+      meta: { requiresAuth: true },
     },
 
     {
@@ -18,22 +19,26 @@ const router = createRouter({
       path: "/descricao/:id",
       name: "descricao",
       component: () => import("../views/DescricaoView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/erros",
       name: "erros",
       component: () => import("../views/ErrosView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/historico",
       name: "historico",
       component: () => import("../views/HistoricoView.vue"),
+      meta: { requiresAuth: true },
     },
 
     {
       path: "/Consulta",
       name: "Consulta",
       component: () => import("../views/ConsultaView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/Entrar",
@@ -41,17 +46,32 @@ const router = createRouter({
       component: () => import("../views/EntrarView.vue"),
     },
     {
-      path: "/Consultas",
-      name: "Consultas",
-      component: () => import("@/views/ListaConsultasView.vue"),
-    },
-    {
       path: "/editar/:id",
       name: "EditarPaciente",
       component: () => import("@/views/EditarPacienteView.vue"),
+      meta: { requiresAuth: true },
     },
   ],
 });
-("");
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem("token");
+
+  // se precisa login e não tem token → manda pro login
+  if (to.meta.requiresAuth && !token) {
+    next("/Entrar");
+  }
+
+  // se já está logado e tenta ir pro login → manda pra home
+  else if (to.path === "/Entrar" && token) {
+    next("/home");
+  }
+
+  else {
+    next();
+  }
+});
+
+//  :)  (:  ("");
 
 export default router;

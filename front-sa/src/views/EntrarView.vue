@@ -20,7 +20,7 @@
 
           <label class="form-label">Senha</label>
           <input
-            v-model="form.senha"
+            v-model="form.password"
             type="password"
             placeholder="Digite sua senha"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -46,22 +46,26 @@
   </form>
 </template>
 <script lang="ts" setup>
-import { postUsuario } from "../services/api";
-import type { Usuario } from "@/interfaces/Usuario";
+import { loginAuth } from "../services/api";
+import type { Medico } from "@/interfaces/Medico";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 const router = useRouter();
-const form = ref({} as Usuario);
+const form = ref({
+  email: "",
+  password: "",
+});
 
 async function Entrar(): Promise<void> {
-  await postUsuario({
-    nome: form.value.nome,
+  const response = await loginAuth({
     email: form.value.email,
-    senha: form.value.senha,
-    sexo: form.value.sexo,
-    idade: form.value.idade,
+    password: form.value.password,
   });
+
+  // se backend retornar token, você pode salvar aqui:
+  // localStorage.setItem("token", response.token);
+  localStorage.setItem("token", response.token);
   router.push("/home");
 }
 </script>

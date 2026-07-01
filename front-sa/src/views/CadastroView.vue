@@ -7,7 +7,7 @@
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-1">
           Cadastro
         </h1>
-        <p class="text-center text-gray-500 mb-6">Cadastre um novo usuário</p>
+        <p class="text-center text-gray-500 mb-6">Cadastre um novo médico</p>
 
         <div class="space-y-4">
           <label class="form-label">Nome completo</label>
@@ -26,7 +26,7 @@
           />
           <label class="form-label">Senha</label>
           <input
-            v-model="form.senha"
+            v-model="form.password"
             type="password"
             placeholder="Digite sua senha"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -43,7 +43,7 @@
 
           <label class="form-label">Idade</label>
           <input
-            v-model="form.idade"
+            v-model.number="form.idade"
             type="number"
             min="1"
             placeholder="Digite sua idade"
@@ -72,18 +72,18 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { postUsuario } from "../services/api";
-import type { Usuario } from "@/interfaces/Usuario";
+import { postMedico } from "../services/api";
+import type { Medico } from "@/interfaces/Medico";
 
 const router = useRouter();
-const form = ref({} as Usuario);
+const form = ref({} as Medico);
 
 async function cadastrar(): Promise<void> {
-  await postUsuario({
+  await postMedico({
     nome: form.value.nome,
 
     email: form.value.email,
-    senha: form.value.senha,
+    password: form.value.password,
     sexo: form.value.sexo,
     idade: form.value.idade,
   });
