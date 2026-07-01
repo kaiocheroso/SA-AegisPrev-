@@ -1,6 +1,7 @@
 export interface Pacientes {
-  id: number;
-  nome: string;
-  cpf: string;
+  idPaciente: number;
+  nomePaciente: string;
+  cpfPaciente: string;
   dataNascimento: string;
+  consultas: [];
 }

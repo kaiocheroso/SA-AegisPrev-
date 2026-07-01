@@ -17,7 +17,53 @@ export async function getPacientesById(id: string | number) {
   return response.data;
 }
 
-export async function postPacientes(pacientes: Omit<Pacientes, "id">) {
+export async function getSintomas() {
+  const response = await api.get("/sintomas");
+  return response.data;
+}
+
+export async function getSintomaById(id: number) {
+  const response = await api.get(`/sintomas/${id}`);
+  return response.data;
+}
+
+export async function getDoencas() {
+  const response = await api.get("/doencas");
+  return response.data;
+}
+
+export async function getDoencaById(id: number) {
+  const response = await api.get(`/doencas/${id}`);
+  return response.data;
+}
+
+export async function getConsultasAdmin() {
+  const response = await api.get("/consultas/admin/consultas");
+  return response.data;
+}
+
+export async function getConsultasMedico() {
+  const response = await api.get("/consultas");
+  return response.data;
+}
+
+export async function getConsultaById(id: number) {
+  const response = await api.get(`/consultas/${id}`);
+  return response.data;
+}
+
+export async function postConsulta(consulta: Omit<Consulta, "id">) {
+  const response = await api.post("/consultas", consulta);
+  return response.data;
+}
+
+export async function deleteConsulta(id: number) {
+  const response = await api.delete(`/consultas/${id}`);
+  return response.data;
+}
+
+
+/*export async function postPacientes(pacientes: Omit<Pacientes, "id">) {
   await api.post("/pacientes", pacientes);
 }
 
@@ -32,7 +78,9 @@ export async function editarPaciente(
 ) {
   const response = await api.put(`/pacientes/${id}`, paciente);
   return response.data;
-}
+}*/
+
+
 export async function postMedico(medico: Omit<Medico, "id">) {
   await api.post<Medico>("/medicos", medico);
 }
@@ -42,8 +90,12 @@ export async function loginAuth(auth: { email: string; password: string }) {
   return response.data;
 }
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
 
-export async function postConsulta(consulta: Omit<Consulta, "id">) {
-  await api.post<Consulta>("/Consulta", consulta);
-}
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
+  return config;
+});

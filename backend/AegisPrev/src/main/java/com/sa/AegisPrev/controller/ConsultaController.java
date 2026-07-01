@@ -49,7 +49,7 @@ public class ConsultaController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','MEDICO')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deletar(@Valid @PathVariable Long id){
         service.deletar(id);
     }

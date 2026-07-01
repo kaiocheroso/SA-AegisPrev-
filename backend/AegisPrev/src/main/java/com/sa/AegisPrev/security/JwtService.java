@@ -28,6 +28,7 @@ public class JwtService {
     public String gerarToken(Usuario usuario) {
         return Jwts.builder()
                 .subject(usuario.getEmail())
+                .claim("role", usuario.getPapeis().name())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getKey())

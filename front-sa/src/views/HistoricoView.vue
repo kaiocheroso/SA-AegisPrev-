@@ -72,53 +72,28 @@
             <thead class="bg-cyan-600 text-white">
               <tr>
                 <th class="px-6 py-4 text-left">Nome</th>
-                <th class="px-6 py-4 text-left">CPF</th>
-                <th class="px-6 py-4 text-center">Ações</th>
+                <th class="px-6 py-4 text-center">CPF</th>
+                <th class="px-6 py-4 text-right">Data de Nascimento</th>
               </tr>
             </thead>
 
             <tbody>
               <tr
                 v-for="paciente in pacientesFiltrados"
-                :key="paciente.id"
+                :key="paciente.idPaciente"
                 class="border-b hover:bg-cyan-50 transition"
               >
-                <td class="px-6 py-4 font-medium">
-                  {{ paciente.nome }}
+                <td class="px-6 py-4 text-left font-medium">
+                  {{ paciente.nomePaciente }}
                 </td>
 
-                <td class="px-6 py-4">
-                  {{ paciente.cpf }}
+                <td class="px-6 py-4 text-center">
+                  {{ paciente.cpfPaciente }}
                 </td>
-
-                <td class="px-6 py-4">
-                  <div class="flex justify-center gap-2">
-                    <RouterLink :to="`/paciente/${paciente.id}`">
-                      <button
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
-                      >
-                        Visualizar
-                      </button>
-                    </RouterLink>
-
-                    <RouterLink :to="`/editar/${paciente.id}`">
-                      <button
-                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg"
-                      >
-                        Editar
-                      </button>
-                    </RouterLink>
-
-                    <button
-                      @click="excluirPaciente(paciente.id)"
-                      class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
-                    >
-                      Excluir
-                    </button>
-                  </div>
+                <td class="px-6 py-4 text-right">
+                  {{ paciente.dataNascimento }}
                 </td>
               </tr>
-
               <tr v-if="pacientesFiltrados.length === 0">
                 <td colspan="5" class="text-center py-8 text-gray-500">
                   Nenhum paciente encontrado.
@@ -129,14 +104,134 @@
         </div>
       </div>
 
-      <div v-if="tabAtiva === 'sintomas'" class="text-gray-600">
-        <h2 class="text-xl font-semibold mb-2">Sintomas</h2>
-        <p>Aqui você pode listar os sintomas cadastrados.</p>
+      <div v-if="tabAtiva === 'sintomas'">
+        <div class="overflow-x-auto rounded-xl shadow">
+          <table class="w-full">
+            <thead class="bg-cyan-600 text-white">
+              <tr>
+                <th class="px-6 py-4 text-left">Nome</th>
+                <th class="px-6 py-4 text-right">Descrição</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                v-for="sintoma in sintomasFiltrados"
+                :key="sintoma.idSintoma"
+                class="border-b hover:bg-cyan-50 transition"
+              >
+                <td class="px-6 py-4 text-left font-medium">
+                  {{ sintoma.nomeSintoma }}
+                </td>
+
+                <td class="px-6 py-4 text-right">
+                  {{ sintoma.descricaoSintoma }}
+                </td>
+              </tr>
+
+              <tr v-if="sintomasFiltrados.length === 0">
+                <td colspan="2" class="text-center py-8 text-gray-500">
+                  Nenhum sintoma encontrado.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div v-if="tabAtiva === 'doencas'" class="text-gray-600">
-        <h2 class="text-xl font-semibold mb-2">Doenças</h2>
-        <p>Aqui você pode listar as doenças cadastradas.</p>
+      <div v-if="tabAtiva === 'doencas'">
+        <div class="overflow-x-auto rounded-xl shadow">
+          <table class="w-full">
+            <thead class="bg-cyan-600 text-white">
+              <tr>
+                <th class="px-6 py-4 text-left">Nome</th>
+                <th class="px-6 py-4 text-center">Hereditária</th>
+                <th class="px-6 py-4 text-right">Descrição</th>
+                <th class="px-6 py-4 text-right">Ações</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                v-for="doenca in doencasFiltradas"
+                :key="doenca.idDoenca"
+                class="border-b hover:bg-cyan-50 transition"
+              >
+                <td class="px-6 py-4 text-left font-medium">
+                  {{ doenca.nomeDoenca }}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                  {{ doenca.hereditaria ? "Sim" : "Não" }}
+                </td>
+
+                <td class="px-6 py-4 text-right">
+                  {{ doenca.descricaoDoenca }}
+                </td>
+
+                <td class="px-6 py-4 text-right">
+                  <button
+                    @click="abrirDoenca(doenca.idDoenca)"
+                    class="text-cyan-600 hover:text-cyan-800"
+                    title="Visualizar"
+                  >
+                    👁️
+                  </button>
+                </td>
+              </tr>
+
+              <tr v-if="doencasFiltradas.length === 0">
+                <td colspan="4" class="text-center py-8 text-gray-500">
+                  Nenhuma doença encontrada.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div v-if="modalAberto" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div class="bg-white rounded-xl p-6 w-full max-w-lg">
+
+            <h2 class="text-2xl font-bold mb-4">
+              {{ doencaSelecionada?.nomeDoenca }}
+            </h2>
+
+            <p class="mb-3">
+              <strong>Descrição:</strong>
+              {{ doencaSelecionada?.descricaoDoenca }}
+            </p>
+
+            <p class="mb-4">
+              <strong>Hereditária:</strong>
+              {{ doencaSelecionada?.hereditaria ? "Sim" : "Não" }}
+            </p>
+
+            <div>
+              <strong>Sintomas</strong>
+
+              <ul class="list-disc ml-6 mt-2">
+                <li
+                  v-for="sintoma in doencaSelecionada?.sintomas"
+                  :key="sintoma.idSintoma"
+                >
+                  {{ sintoma.nomeSintoma }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+              <button
+                @click="modalAberto = false"
+                class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700"
+              >
+                Fechar
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+
       </div>
 
     </div>
@@ -145,37 +240,84 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { getPacientes, deletePaciente } from "../services/api";
+import { getPacientes, getSintomas, getDoencas, getDoencaById} from "../services/api";
 import type { Pacientes } from "@/interfaces/Pacientes";
+import type { Sintoma } from "@/interfaces/Sintoma";
+import type { Doenca } from "@/interfaces/Doenca";
+
 const tabAtiva = ref("pacientes");
-
-
-const router = useRouter();
-
 const pesquisa = ref("");
 
 const pacientes = ref<Pacientes[]>([]);
+const sintomas = ref<Sintoma[]>([]);
+const doencas = ref<Doenca[]>([]);
 
 const pacientesFiltrados = computed(() => {
+  const texto = pesquisa.value.toLowerCase();
+
   return pacientes.value.filter((paciente) =>
-    paciente.nome.toLowerCase().includes(pesquisa.value.toLowerCase()),
+    paciente.nomePaciente.toLowerCase().includes(texto)
   );
 });
 
-async function excluirPaciente(id: number) {
-  if (!window.confirm("Você tem certeza que deseja excluir este paciente?")) {
-    return;
-  }
+const sintomasFiltrados = computed(() => {
+  const texto = pesquisa.value.toLowerCase();
 
-  await deletePaciente(id);
-  await buscarPacientes();
-}
+  return sintomas.value.filter((sintoma) =>
+    sintoma.nomeSintoma.toLowerCase().includes(texto)
+  );
+});
+
+const doencasFiltradas = computed(() => {
+  const texto = pesquisa.value.toLowerCase();
+
+  return doencas.value.filter((doenca) =>
+    doenca.nomeDoenca.toLowerCase().includes(texto)
+  );
+});
 
 async function buscarPacientes() {
-  const resposta = await getPacientes();
-  pacientes.value = resposta;
+  try {
+    const resposta = await getPacientes();
+
+    // Se getPacientes retorna apenas o array:
+    pacientes.value = resposta;
+
+    // Caso retorne AxiosResponse, troque por:
+    // pacientes.value = resposta.data;
+
+  } catch (erro) {
+    console.error("Erro ao buscar pacientes:", erro);
+  }
 }
 
-onMounted(buscarPacientes);
+async function buscarSintomas() {
+  try {
+    sintomas.value = await getSintomas();
+  } catch (erro) {
+    console.error("Erro ao buscar sintomas:", erro);
+  }
+}
+
+async function buscarDoencas() {
+  try {
+    doencas.value = await getDoencas();
+  } catch (erro) {
+    console.error("Erro ao buscar doenças:", erro);
+  }
+}
+
+const doencaSelecionada = ref<Doenca | null>(null);
+const modalAberto = ref(false);
+
+async function abrirDoenca(id: number) {
+  doencaSelecionada.value = await getDoencaById(id);
+  modalAberto.value = true;
+}
+
+onMounted(async () => {
+  await buscarPacientes();
+  await buscarSintomas();
+  await buscarDoencas();
+});
 </script>

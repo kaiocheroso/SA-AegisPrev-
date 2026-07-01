@@ -8,7 +8,7 @@
       >
         <h1 class="text-2xl font-bold text-cyan-800">AegisPrev</h1>
         <div>
-          <RouterLink to="/Consulta">
+          <RouterLink to="/cadastrar-consulta">
             <button
               class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition"
             >
@@ -58,7 +58,7 @@
             <p class="text-gray-500 text-sm mt-2">Histórico dos pacientes</p>
           </div>
         </RouterLink>
-        <RouterLink to="/Consultas" class="block w-full">
+        <RouterLink to="/consultas" class="block w-full">
           <div
             class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition text-left h-full"
           >

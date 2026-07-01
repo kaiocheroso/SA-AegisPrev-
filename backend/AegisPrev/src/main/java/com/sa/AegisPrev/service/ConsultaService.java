@@ -173,52 +173,46 @@ public class ConsultaService {
         repository.delete(consulta);
     }
 
-    private List<Doenca> preverDoencas(Consulta consulta){
+    private List<Doenca> preverDoencas(Consulta consulta) {
 
-        List<Sintoma> sintomasConsulta = consulta.getSintomas();
+        List<Sintoma> sintomasConsulta =
+                consulta.getSintomas() != null ? consulta.getSintomas() : List.of();
 
         return doencaRepository.findAll()
                 .stream()
-                .filter(doenca ->
-                        doenca.getSintomas()
-                                .stream()
-                                .anyMatch(sintomasConsulta::contains)
-                )
+                .filter(doenca -> calcularCompatibilidade(doenca, sintomasConsulta) >= 70)
                 .toList();
     }
 
     private List<DoencaPrevistaDTO> calcularPrevisoes(Consulta consulta){
 
-        List<Sintoma> sintomasConsulta = consulta.getSintomas();
+        List<Sintoma> sintomasConsulta =
+                consulta.getSintomas() != null ? consulta.getSintomas() : List.of();
 
         return doencaRepository.findAll()
                 .stream()
-                .map(doenca -> {
-
-                    long coincidencias = doenca.getSintomas()
-                            .stream()
-                            .filter(sintomasConsulta::contains)
-                            .count();
-
-                    double compatibilidade = 0;
-
-                    if (!sintomasConsulta.isEmpty()) {
-                        compatibilidade =
-                                ((double) coincidencias / sintomasConsulta.size()) * 100;
-                    }
-
-                    return new DoencaPrevistaDTO(
-                            doenca.getIdDoenca(),
-                            doenca.getNomeDoenca(),
-                            compatibilidade
-                    );
-                })
-                .filter(dto -> dto.compatibilidade() > 0)
-                .sorted((a, b) ->
-                        Double.compare(
-                                b.compatibilidade(),
-                                a.compatibilidade()))
+                .map(doenca -> new DoencaPrevistaDTO(
+                        doenca.getIdDoenca(),
+                        doenca.getNomeDoenca(),
+                        calcularCompatibilidade(doenca, sintomasConsulta)
+                ))
+                .filter(dto -> dto.compatibilidade() >= 10)
+                .sorted((a, b) -> Double.compare(b.compatibilidade(), a.compatibilidade()))
                 .toList();
+    }
+
+    private double calcularCompatibilidade(Doenca doenca, List<Sintoma> sintomasConsulta) {
+
+        if (sintomasConsulta.isEmpty()) {
+            return 0;
+        }
+
+        long coincidencias = doenca.getSintomas()
+                .stream()
+                .filter(sintomasConsulta::contains)
+                .count();
+
+        return ((double) coincidencias / sintomasConsulta.size()) * 100;
     }
 
 }

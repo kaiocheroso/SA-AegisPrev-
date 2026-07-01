@@ -35,13 +35,13 @@ const router = createRouter({
     },
 
     {
-      path: "/Consulta",
+      path: "/cadastrar-consulta",
       name: "Consulta",
-      component: () => import("../views/ConsultaView.vue"),
+      component: () => import("../views/CadastrarConsultaView.vue"),
       meta: { requiresAuth: true },
     },
     {
-      path: "/Entrar",
+      path: "/entrar",
       name: "Entrar",
       component: () => import("../views/EntrarView.vue"),
     },
@@ -51,6 +51,12 @@ const router = createRouter({
       component: () => import("@/views/EditarPacienteView.vue"),
       meta: { requiresAuth: true },
     },
+    {
+      path: "/consultas",
+      name: "Consultas",
+      component: () => import("@/views/ConsultasView.vue"),
+      meta: { requiresAuth: true },
+    }
   ],
 });
 
@@ -59,11 +65,11 @@ router.beforeEach((to, from, next) => {
 
   // se precisa login e não tem token → manda pro login
   if (to.meta.requiresAuth && !token) {
-    next("/Entrar");
+    next("/entrar");
   }
 
   // se já está logado e tenta ir pro login → manda pra home
-  else if (to.path === "/Entrar" && token) {
+  else if (to.path === "/entrar" && token) {
     next("/home");
   }
 
