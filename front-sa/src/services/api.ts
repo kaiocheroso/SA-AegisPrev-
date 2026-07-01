@@ -2,13 +2,17 @@ import axios from "axios";
 import type { Medico } from "../interfaces/Medico";
 import type { Pacientes } from "../interfaces/Pacientes";
 import type { Consulta } from "../interfaces/Consulta";
+import type { ConsultaRequest } from "../interfaces/ConsultaRequest";
 
 const api = axios.create({
   baseURL: "http://localhost:8080",
 });
 
-export async function getPacientes() {
-  const response = await api.get("/pacientes");
+export async function getPacientes(params?: {
+  cpfPaciente?: string;
+  nomePaciente?: string;
+}) {
+  const response = await api.get("/pacientes", { params });
   return response.data;
 }
 
@@ -52,9 +56,8 @@ export async function getConsultaById(id: number) {
   return response.data;
 }
 
-export async function postConsulta(consulta: Omit<Consulta, "id">) {
-  const response = await api.post("/consultas", consulta);
-  return response.data;
+export async function postConsulta(data: ConsultaRequest) {
+  return api.post("/consultas", data);
 }
 
 export async function deleteConsulta(id: number) {

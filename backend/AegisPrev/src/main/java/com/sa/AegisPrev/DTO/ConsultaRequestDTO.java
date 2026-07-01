@@ -7,8 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record ConsultaRequestDTO(
-        @NotNull(message = "O id medico nao pode estar vazio")
-        Long idMedico,
         @NotNull(message = "O id paciente nao pode estar vazio")
         Long idPaciente,
         @NotBlank(message = "Não pode estar vazio")

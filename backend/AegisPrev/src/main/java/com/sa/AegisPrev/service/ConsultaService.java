@@ -117,8 +117,11 @@ public class ConsultaService {
     }
 
     public ConsultaResponseDTO salvar(ConsultaRequestDTO dto){
-        Medico medico = medicoRepository.findById(dto.idMedico()).orElseThrow(() -> new RecursoNaoEncontradoException("ID do medico nao encontrado"));
+        Usuario usuario = obterUsuarioLogado();
+
+        Medico medico = medicoRepository.findByUsuarioIdUsuario(usuario.getIdUsuario()).orElseThrow(() -> new RecursoNaoEncontradoException("ID do usuario nao encontrado"));
         Paciente paciente = pacienteRepository.findById(dto.idPaciente()).orElseThrow(() -> new RecursoNaoEncontradoException("ID do paciente nao encontrado"));
+
         Consulta consulta = new Consulta();
 
         consulta.setMedico(medico);
@@ -144,7 +147,8 @@ public class ConsultaService {
         Consulta consulta = pegarId(idConsulta);
         validarAcessoConsulta(consulta);
 
-        Medico medico = medicoRepository.findById(dto.idMedico())
+        Medico medico = medicoRepository
+                .findByUsuarioIdUsuario(obterUsuarioLogado().getIdUsuario())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("ID do medico nao encontrado"));
 
         Paciente paciente = pacienteRepository.findById(dto.idPaciente())
