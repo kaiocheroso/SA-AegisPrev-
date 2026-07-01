@@ -8,11 +8,29 @@ const api = axios.create({
 });
 
 export async function getPacientes() {
-  const response = await api.get("/Pacientes");
+  const response = await api.get("/pacientes");
   return response.data;
 }
+
 export async function getPacientesById(id: string | number) {
-  const response = await api.get(`/Pacientes/${id}`);
+  const response = await api.get(`/pacientes/${id}`);
+  return response.data;
+}
+
+export async function postPacientes(pacientes: Omit<Pacientes, "id">) {
+  await api.post("/pacientes", pacientes);
+}
+
+export async function deletePaciente(id: string | number) {
+  const response = await api.delete(`/pacientes/${id}`);
+  return response.data;
+}
+
+export async function editarPaciente(
+  id: number,
+  paciente: Omit<Pacientes, "id">,
+) {
+  const response = await api.put(`/pacientes/${id}`, paciente);
   return response.data;
 }
 export async function postMedico(medico: Omit<Medico, "id">) {
@@ -24,23 +42,8 @@ export async function loginAuth(auth: { email: string; password: string }) {
   return response.data;
 }
 
-export async function postPacientes(pacientes: Omit<Pacientes, "id">) {
-  await api.post<Pacientes>("/Pacientes", pacientes);
-}
 
 export async function postConsulta(consulta: Omit<Consulta, "id">) {
   await api.post<Consulta>("/Consulta", consulta);
 }
 
-export async function deletePaciente(id: string | number) {
-  const response = await api.delete(`/Pacientes/${id}`);
-  return response.data;
-}
-
-export async function editarPaciente(
-  id: number,
-  paciente: Omit<Pacientes, "id">,
-) {
-  const response = await api.put(`/Pacientes/${id}`, paciente);
-  return response.data;
-}
