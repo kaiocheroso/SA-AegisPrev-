@@ -10,7 +10,7 @@ const api = axios.create({
 
 
 export async function getMedicoByEmail(email: string) {
-  const response = await api.get("/medicos", {
+  const response = await api.get("/medicos/email", {
     params: { email },
   });
 
@@ -22,6 +22,13 @@ export async function getPacientes(params?: {
   nomePaciente?: string;
 }) {
   const response = await api.get("/pacientes", { params });
+  return response.data;
+}
+
+export async function getMedicos(params?: {
+  nome?: string;
+}) {
+  const response = await api.get("/medicos", { params });
   return response.data;
 }
 
@@ -40,8 +47,8 @@ export async function getSintomaById(id: number) {
   return response.data;
 }
 
-export async function getDoencas() {
-  const response = await api.get("/doencas");
+export async function getDoencas(params?: { nome?: string; isHereditaria?: boolean }) {
+  const response = await api.get("/doencas", { params });
   return response.data;
 }
 

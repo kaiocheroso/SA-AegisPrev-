@@ -11,6 +11,8 @@ public record MedicoResponseDTO(
         String sexo,
         Integer idade,
         String email,
+        Long idUsuario,
+        String role,
         List<ConsultaResumoDTO> consultas
 ){
 }

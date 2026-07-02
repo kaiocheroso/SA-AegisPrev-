@@ -26,13 +26,14 @@ public class MedicoService {
     }
 
     private MedicoResponseDTO toResponseDTO(Medico medico) {
-
         return new MedicoResponseDTO(
                 medico.getIdMedico(),
                 medico.getNome(),
                 medico.getSexo(),
                 medico.getIdade(),
                 medico.getUsuario().getEmail(),
+                medico.getUsuario().getIdUsuario(),
+                medico.getUsuario().getPapeis().name(),
                 medico.getConsultas()
                         .stream().map(consulta -> new ConsultaResumoDTO(
                                     consulta.getIdConsulta(),
@@ -76,12 +77,10 @@ public class MedicoService {
         }
     }
 
-    public List<MedicoResponseDTO> listar(String email, String nome) {
+    public List<MedicoResponseDTO> listar(String nome) {
         List<Medico> medicos;
 
-        if (email != null){
-            medicos = buscarPorEmail(email);
-        } else if (nome != null) {
+        if (nome != null) {
             medicos = buscarPorNome(nome);
         } else {
             medicos = medicoRepository.findAll();
@@ -101,9 +100,8 @@ public class MedicoService {
         return medicoRepository.findById(idMedico).orElseThrow(() -> new RecursoNaoEncontradoException("ID nao encontrado"));
     }
 
-    public List<Medico> buscarPorEmail(String email){
-        //deveria ser optional, mas foi o que deu para colocar no listar();
-         return medicoRepository.findByUsuarioEmail(email);
+    public MedicoResponseDTO buscarPorEmail(String email){
+         return toResponseDTO(medicoRepository.findByUsuarioEmail(email));
     }
 
     public List<Medico> buscarPorNome(String nome){

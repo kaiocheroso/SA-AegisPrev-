@@ -32,6 +32,12 @@
           placeholder="Pesquisar..."
           class="w-full md:w-96 border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
         />
+        <div class="mb-4 flex items-center gap-4">
+          <label class="flex items-center gap-2">
+            <input type="checkbox" v-model="filtroHereditaria" />
+            Apenas hereditárias
+          </label>
+        </div>
       </div>
 
       <div class="flex gap-2 border-b mb-6">
@@ -64,6 +70,18 @@
         >
           Doenças
         </button>
+
+        <button
+          v-if="isAdmin"
+          @click="tabAtiva = 'medicos'"
+          class="px-4 py-2"
+          :class="tabAtiva === 'medicos'
+            ? 'border-b-2 border-cyan-600 text-cyan-700 font-semibold'
+            : 'text-gray-500'"
+        >
+          Médicos
+        </button>
+
       </div>
       
       <div v-if="tabAtiva === 'pacientes'">
@@ -230,8 +248,42 @@
 
           </div>
         </div>
+      </div>
 
+      <div v-if="tabAtiva === 'medicos'">
+        <div class="overflow-x-auto rounded-xl shadow">
+          <table class="w-full">
+            <thead class="bg-cyan-600 text-white">
+              <tr>
+                <th class="px-6 py-4 text-left">Nome</th>
+                <th class="px-6 py-4 text-center">Email</th>
+                <th class="px-6 py-4 text-right">Papel</th>
+              </tr>
+            </thead>
 
+            <tbody>
+              <tr v-for="medico in medicosFiltrados" :key="medico.id" class="border-b hover:bg-cyan-50 transition">
+                <td class="px-6 py-4 text-left font-medium">
+                  {{ medico.nome }}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                  {{ medico.email }}
+                </td>
+
+                <td class="px-6 py-4 text-right">
+                  {{ medico.role === 'ROLE_ADMIN' ? 'Administrador' : 'Médico' }}
+                </td>
+              </tr>
+
+              <tr v-if="medicosFiltrados.length === 0">
+                <td colspan="3" class="text-center py-8 text-gray-500">
+                  Nenhum médico encontrado.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
     </div>
@@ -239,11 +291,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { getPacientes, getSintomas, getDoencas, getDoencaById} from "../services/api";
+import { ref, computed, onMounted , watch } from "vue";
+import { getPacientes, getSintomas, getDoencas, getDoencaById, getMedicos } from "../services/api";
 import type { Pacientes } from "@/interfaces/Pacientes";
 import type { Sintoma } from "@/interfaces/Sintoma";
 import type { Doenca } from "@/interfaces/Doenca";
+import type { Medico } from "@/interfaces/Medico";
 
 const tabAtiva = ref("pacientes");
 const pesquisa = ref("");
@@ -251,12 +304,30 @@ const pesquisa = ref("");
 const pacientes = ref<Pacientes[]>([]);
 const sintomas = ref<Sintoma[]>([]);
 const doencas = ref<Doenca[]>([]);
+const filtroHereditaria = ref(false);
+
+const token = localStorage.getItem("token");
+
+const isAdmin = computed(() => {
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.role === "ROLE_ADMIN";
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+});
+
+const medicos = ref<Medico[]>([]);
 
 const pacientesFiltrados = computed(() => {
   const texto = pesquisa.value.toLowerCase();
 
   return pacientes.value.filter((paciente) =>
-    paciente.nomePaciente.toLowerCase().includes(texto)
+    paciente.nomePaciente.toLowerCase().includes(texto) ||
+    paciente.cpfPaciente.toLowerCase().includes(texto)
   );
 });
 
@@ -273,6 +344,14 @@ const doencasFiltradas = computed(() => {
 
   return doencas.value.filter((doenca) =>
     doenca.nomeDoenca.toLowerCase().includes(texto)
+  );
+});
+
+const medicosFiltrados = computed(() => {
+  const texto = pesquisa.value.toLowerCase();
+
+  return medicos.value.filter((medico) =>
+    medico.nome.toLowerCase().includes(texto)
   );
 });
 
@@ -301,9 +380,23 @@ async function buscarSintomas() {
 
 async function buscarDoencas() {
   try {
-    doencas.value = await getDoencas();
+    doencas.value = await getDoencas({
+      isHereditaria: filtroHereditaria.value ? true : undefined
+    });
   } catch (erro) {
     console.error("Erro ao buscar doenças:", erro);
+  }
+}
+
+watch(filtroHereditaria, async () => {
+  await buscarDoencas();
+});
+
+async function buscarMedicos() {
+  try {
+    medicos.value = await getMedicos();
+  } catch (erro) {
+    console.error("Erro ao buscar médicos:", erro);
   }
 }
 
@@ -319,5 +412,9 @@ onMounted(async () => {
   await buscarPacientes();
   await buscarSintomas();
   await buscarDoencas();
+
+  if(isAdmin.value){
+    await buscarMedicos();
+  }
 });
 </script>

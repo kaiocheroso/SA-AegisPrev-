@@ -25,11 +25,14 @@ public class MedicoController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Listar todos os medicos, também pode adicionar filtros")
     @GetMapping
-    public List<MedicoResponseDTO> listar(
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String nome
-        ){
-        return medicoService.listar(email, nome);
+    public List<MedicoResponseDTO> listar(@RequestParam(required = false) String nome){
+        return medicoService.listar(nome);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Buscar médico por email")
+    @GetMapping("/email")
+    public MedicoResponseDTO buscarPorEmail(@RequestParam String email){
+        return medicoService.buscarPorEmail(email);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MEDICO')")

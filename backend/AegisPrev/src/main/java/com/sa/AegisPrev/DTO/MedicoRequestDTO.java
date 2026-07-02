@@ -1,8 +1,6 @@
 package com.sa.AegisPrev.DTO;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 public record MedicoRequestDTO (
 
@@ -13,6 +11,8 @@ public record MedicoRequestDTO (
         String sexo,
 
         @NotNull(message = "nao pode ser nula")
+        @Min(18)
+        @Max(120)
         Integer idade,
 
         @NotBlank(message = "Email nao pode estar vazio")

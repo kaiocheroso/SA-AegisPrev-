@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MedicoRepository extends JpaRepository<Medico, Long> {
-    List<Medico> findByUsuarioEmail(String email);
+    Medico findByUsuarioEmail(String email);
     Optional<Medico> findByUsuarioIdUsuario(Long idUsuario);
     List<Medico> findByNomeContainingIgnoreCase(String nome);
 }
