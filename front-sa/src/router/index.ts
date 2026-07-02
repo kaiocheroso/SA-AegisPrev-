@@ -9,7 +9,6 @@ const router = createRouter({
       component: () => import("../views/HomeView.vue"),
       meta: { requiresAuth: true },
     },
-
     {
       path: "/",
       name: "cadastro",
@@ -60,18 +59,14 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from) => {
   const token = localStorage.getItem("token");
 
-  if(!token){
-    return;
-  }
-
   // sem login
-  if (to.meta.requiresAuth && !token) {
-    return next("/entrar");
+  if (to.meta.requiresAuth && !token && from.name !== "entrar") {
+    return { name: "entrar" };
   }
-
+  
   // pega role do token
   let role = null;
 
@@ -81,21 +76,21 @@ router.beforeEach((to, from, next) => {
       role = payload.role;
     } catch (e) {
       console.error("Token inválido");
-      return next("/entrar");
+      return { name: "entrar" };
     }
   }
 
   // se rota exige role específica
   if (to.meta.role && to.meta.role !== role) {
-    return next("/home"); // ou página 403
+    return { name: "home" }; // ou página 403
   }
 
   // já logado tentando login
   if (to.path === "/entrar" && token) {
-    return next("/home");
+    return { name: "home" };
   }
+  
 
-  return next();
 });
 
 //  :)  (:  ("");

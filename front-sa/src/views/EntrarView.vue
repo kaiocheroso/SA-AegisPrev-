@@ -37,9 +37,9 @@
 
         <p class="text-center text-gray-500 mt-4 text-sm">
           Não possui uma conta?
-          <router-link to="/" class="text-blue-600 hover:underline"
-            >Cadastrar</router-link
-          >
+          <RouterLink to="/" class="text-blue-600 hover:underline">
+              Cadastrar
+          </RouterLink>
         </p>
       </div>
     </div>
@@ -49,7 +49,7 @@
 import { loginAuth } from "../services/api";
 import type { Medico } from "@/interfaces/Medico";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref , onMounted } from "vue";
 
 const router = useRouter();
 const form = ref({
@@ -67,5 +67,10 @@ async function Entrar(): Promise<void> {
   // localStorage.setItem("token", response.token);
   localStorage.setItem("token", response.token);
   router.push("/home");
+  
 }
+
+onMounted(() => {
+  localStorage.clear();
+});
 </script>

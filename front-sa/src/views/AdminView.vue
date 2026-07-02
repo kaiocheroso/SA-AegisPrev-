@@ -1,5 +1,12 @@
 <template>
   <div class="min-h-screen bg-gray-100 p-8">
+
+    <RouterLink to="/home">
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Voltar
+      </button>
+    </RouterLink>
+
     <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8">
 
       <h1 class="text-3xl font-bold text-cyan-700 mb-8">
@@ -7,8 +14,7 @@
       </h1>
 
       <div class="space-y-6">
-
-        <div>
+        <div class="relative">
           <label class="block mb-2 font-semibold">
             E-mail do usuário
           </label>
@@ -19,6 +25,21 @@
             class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             placeholder="Digite o e-mail do usuário"
           />
+
+          <!-- lista de sugestões -->
+          <div
+            v-if="sugestoes.length"
+            class="absolute z-10 w-full bg-white border rounded-lg mt-1 shadow"
+          >
+            <div
+              v-for="m in sugestoes"
+              :key="m.idMedico"
+              @click="selecionarMedico(m)"
+              class="p-3 hover:bg-gray-100 cursor-pointer"
+            >
+              {{ m.email }}
+            </div>
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
@@ -115,6 +136,7 @@ function selecionarMedico(medico: any) {
   medicoSelecionado.value = medico;
   email.value = medico.email;
   sugestoes.value = [];
+  erro.value = ""; // limpa erro ao selecionar
 }
 
 function obterIdUsuario() {
@@ -128,9 +150,6 @@ function limparMensagens() {
   mensagem.value = "";
   erro.value = "";
 }
-
-const mensagem = ref("");
-const erro = ref("");
 
 async function adminSemana() {
   limparMensagens();

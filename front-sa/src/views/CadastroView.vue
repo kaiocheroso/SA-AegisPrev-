@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { postMedico } from "../services/api";
 import type { Medico } from "@/interfaces/Medico";
@@ -89,4 +89,8 @@ async function cadastrar(): Promise<void> {
   });
   router.push("/home");
 }
+
+onMounted(() => {
+  localStorage.clear();
+});
 </script>
