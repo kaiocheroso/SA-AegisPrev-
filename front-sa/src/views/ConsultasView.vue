@@ -38,9 +38,10 @@
       <!-- Pesquisa -->
       <div class="bg-white rounded-xl shadow p-5 mb-6">
         <input
+          v-model="pesquisa"
           type="text"
           placeholder="Pesquisar paciente..."
-          class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-cyan-500 outline-none"
+          class="w-full border rounded-lg px-4 py-3"
         />
       </div>
 
@@ -60,8 +61,8 @@
           <tbody>
 
             <tr
-              v-for="consulta in consultas"
-              :key="consulta.idConsulta"
+                  v-for="consulta in consultasFiltradas"
+                  :key="consulta.idConsulta"
               class="border-b hover:bg-gray-50 transition"
             >
               <td class="px-6 py-4">
@@ -240,7 +241,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { getConsultasAdmin, getConsultasMedico , getConsultaById , deleteConsulta} from "@/services/api";
 import type { Consulta } from "@/interfaces/Consulta";
 import type { JwtPayload } from "@/interfaces/JwtPayload";
@@ -249,6 +250,17 @@ const consultas = ref<Consulta[]>([]);
 const consultaSelecionada = ref<Consulta | null>(null);
 
 const modalAberto = ref(false);
+
+const pesquisa = ref("");
+
+const consultasFiltradas = computed(() => {
+  return consultas.value.filter(c =>
+    c.paciente.nomePaciente
+      .toLowerCase()
+      .includes(pesquisa.value.toLowerCase())
+  );
+});
+
 
 async function abrirConsulta(id: number) {
   consultaSelecionada.value = await getConsultaById(id);
