@@ -21,7 +21,6 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        <!-- Top Doenças -->
         <div class="bg-white rounded-2xl shadow-lg p-6">
           <h2 class="text-xl font-semibold text-cyan-700 mb-5">
             Top 10 Doenças
@@ -53,7 +52,6 @@
           </table>
         </div>
 
-        <!-- Ranking Médicos -->
         <div class="bg-white rounded-2xl shadow-lg p-6">
           <h2 class="text-xl font-semibold text-cyan-700 mb-5">
             Ranking de Médicos
@@ -63,7 +61,6 @@
             <thead>
               <tr class="border-b">
                 <th class="text-left py-2">Médico</th>
-                <th class="text-right py-2">Consultas</th>
               </tr>
             </thead>
 
@@ -75,10 +72,6 @@
               >
                 <td class="py-3">
                   {{ medico.nomeMedico }}
-                </td>
-
-                <td class="text-right font-semibold text-cyan-700">
-                  {{ medico.quantidadeConsultas }}
                 </td>
               </tr>
             </tbody>

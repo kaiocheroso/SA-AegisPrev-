@@ -20,7 +20,7 @@
           <button
             class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition"
           >
-            Voltar
+           ← Voltar
           </button>
         </RouterLink>
       </div>
