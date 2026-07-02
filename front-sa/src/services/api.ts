@@ -17,6 +17,11 @@ export async function getMedicoByEmail(email: string) {
   return response.data;
 }
 
+export async function getMedicoLogado() {
+  const response = await api.get("/medicos/me");
+  return response.data;
+}
+
 export async function getPacientes(params?: {
   cpfPaciente?: string;
   nomePaciente?: string;

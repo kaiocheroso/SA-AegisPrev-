@@ -9,6 +9,10 @@
         </h1>
         <p class="text-center text-gray-500 mb-6">Cadastre um novo médico</p>
 
+        <p v-if="erro" class="text-red-500 text-sm text-center">
+          {{ erro }}
+        </p>
+
         <div class="space-y-4">
           <label class="form-label">Nome completo</label>
           <input
@@ -21,7 +25,7 @@
           <input
             v-model="form.email"
             type="email"
-            placeholder="Digite seu email"
+            placeholder="you@aegisprev.com"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
           <label class="form-label">Senha</label>
@@ -45,7 +49,7 @@
           <input
             v-model.number="form.idade"
             type="number"
-            min="1"
+            min="18"
             placeholder="Digite sua idade"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
@@ -77,8 +81,41 @@ import type { Medico } from "@/interfaces/Medico";
 
 const router = useRouter();
 const form = ref({} as Medico);
+const erro = ref("");
+
+function validarFormulario(): string | null {
+  if (!form.value.nome || form.value.nome.length < 3) {
+    return "Nome inválido";
+  }
+
+  if (!form.value.email || !form.value.email.includes("@")) {
+    return "Email inválido";
+  }
+
+  if (!form.value.password || form.value.password.length < 6) {
+    return "Senha precisa ter pelo menos 6 caracteres";
+  }
+
+  if (!form.value.sexo) {
+    return "Selecione o sexo";
+  }
+
+  if (!form.value.idade || form.value.idade < 18) {
+    return "Idade mínima é 18";
+  }
+
+  return null;
+}
 
 async function cadastrar(): Promise<void> {
+  const erroMsg = validarFormulario();
+  if (erroMsg) {
+    erro.value = erroMsg;
+    return;
+  }
+
+  erro.value = "";
+  
   await postMedico({
     nome: form.value.nome,
 

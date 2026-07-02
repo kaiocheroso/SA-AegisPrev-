@@ -1,13 +1,12 @@
 <template>
-  <div
-    class="min-h-screen bg-gradient-to-br from-cyan-100 via-blue-50 to-emerald-100"
-  >
-    <header class="bg-white shadow-md">
-      <div
-        class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"
-      >
+  <div class="min-h-screen bg-gradient-to-br from-cyan-100 via-blue-50 to-emerald-100">
+    <header class="bg-white shadow-md relative">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
         <h1 class="text-2xl font-bold text-cyan-800">AegisPrev</h1>
-        <div>
+
+        <div class="flex items-center gap-4">
+
           <RouterLink to="/cadastrar-consulta">
             <button
               class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition"
@@ -15,6 +14,89 @@
               Cadastrar Consulta
             </button>
           </RouterLink>
+
+          <div class="flex items-center gap-3">
+            <p class="text-sm text-gray-600">
+              Olá, <span class="font-semibold text-cyan-700">
+                {{ medico?.nome }}
+              </span>
+            </p>
+
+          
+            <div class="relative avatar-menu">
+
+              <button
+                @click="toggleMenu"
+                class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-6 h-6 text-gray-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5.121 17.804A9 9 0 1118.88 17.8M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </button>
+
+              <!-- DROPDOWN (DENTRO DO RELATIVE) -->
+              <div
+                v-if="menuOpen"
+                class="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50 overflow-hidden"
+              >
+                <button
+                  @click="openProfile"
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  Perfil
+                </button>
+
+                <button
+                  @click="logout"
+                  class="w-full text-left px-4 py-2 hover:bg-red-100 text-red-600"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="profileOpen" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-96 p-6 relative">
+
+          <h2 class="text-xl font-bold text-cyan-700 mb-4">
+            Meu Perfil
+          </h2>
+
+          <div class="space-y-2 text-gray-700">
+
+            <p><strong>Nome:</strong> {{ medico?.nome }}</p>
+            <p><strong>Email:</strong> {{ medico?.email }}</p>
+            <p><strong>Sexo:</strong> {{ medico?.sexo }}</p>
+            <p><strong>Idade:</strong> {{ medico?.idade }}</p>
+            <p><strong>Papel:</strong> {{ user.role }}</p>
+
+            <!-- se tiver especialidade -->
+            <p v-if="medico?.especialidade">
+              <strong>Especialidade:</strong> {{ medico?.especialidade }}
+            </p>
+
+          </div>
+
+          <button
+            @click="profileOpen = false"
+            class="absolute top-2 right-3 text-gray-500 hover:text-black"
+          >
+            ✕
+          </button>
         </div>
       </div>
     </header>
@@ -89,22 +171,71 @@
   
 </template>
 <script setup>
-import { computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { getMedicoLogado } from "@/services/api";
 
-const token = localStorage.getItem("token");
+const medico = ref(null);
+const menuOpen = ref(false);
+const profileOpen = ref(false);
 
-const isAdmin = computed(() => {
-  if (!token) return false;
+function toggleMenu() {
+  menuOpen.value = !menuOpen.value;
+}
+
+function openProfile() {
+  profileOpen.value = true;
+  menuOpen.value = false;
+}
+
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "/";
+}
+
+/* decode JWT */
+function decodeToken() {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
 
   try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-
-    console.log(payload);
-
-    return payload.role === "ROLE_ADMIN";
+    return JSON.parse(atob(token.split(".")[1]));
   } catch (e) {
-    console.error(e);
-    return false;
+    return null;
   }
+}
+
+/* usuário (perfil) */
+const user = computed(() => {
+  const payload = decodeToken();
+
+  return {
+    email: payload?.sub || payload?.email || "desconhecido",
+    role: payload?.role || "N/A",
+    nome: payload?.nome || "Usuário",
+  };
+});
+
+/* admin */
+const isAdmin = computed(() => {
+  const payload = decodeToken();
+  return payload?.role === "ROLE_ADMIN";
+});
+
+/* fechar menu ao clicar fora */
+onMounted(async () => {
+  try {
+    medico.value = await getMedicoLogado();
+  } catch (err) {
+    console.error("Erro ao buscar médico logado:", err);
+  }
+  window.addEventListener("click", (e) => {
+    const el = e.target;
+
+    if (el instanceof HTMLElement) {
+      if (!el.closest(".avatar-menu")) {
+        menuOpen.value = false;
+      }
+    }
+  });
 });
 </script>

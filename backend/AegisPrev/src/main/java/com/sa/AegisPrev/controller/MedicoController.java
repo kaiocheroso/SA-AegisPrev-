@@ -42,6 +42,12 @@ public class MedicoController {
         return medicoService.buscarPorId(idMedico);
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO')")
+    public MedicoResponseDTO me() {
+        return medicoService.buscarLogado();
+    }
+
     @PostMapping
     public MedicoResponseDTO criar(@Valid @RequestBody MedicoRequestDTO dto){
         return medicoService.salvar(dto);

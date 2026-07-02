@@ -108,6 +108,13 @@ public class MedicoService {
         return medicoRepository.findByNomeContainingIgnoreCase(nome);
     }
 
+    public MedicoResponseDTO buscarLogado() {
+        Usuario usuario = UsuarioService.obterUsuarioLogado();
+        Medico medico = medicoRepository.findByUsuarioEmail(usuario.getEmail());
+
+        return toResponseDTO(medico);
+    }
+
     public MedicoResponseDTO salvar(MedicoRequestDTO request){
         Medico medico = toEntity(request);
         Medico salvo = medicoRepository.save(medico);

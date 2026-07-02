@@ -2,7 +2,7 @@ export interface Medico {
   id: Number;
   nome: string;
   sexo: string;
-  idade: Number;
+  idade: number;
   email: string;
   password: string;
 }

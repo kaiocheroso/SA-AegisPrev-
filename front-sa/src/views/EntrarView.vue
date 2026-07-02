@@ -7,7 +7,11 @@
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-1">
           Entrar
         </h1>
-
+  
+        <p v-if="errorMessage" class="text-red-500 text-center text-sm">
+          {{ errorMessage }}
+        </p>
+  
         <p class="text-center text-gray-500 mb-4">Conecte-se à sua conta</p>
         <div class="space-y-4">
           <label class="form-label">Email</label>
@@ -57,16 +61,27 @@ const form = ref({
   password: "",
 });
 
+const errorMessage = ref<string | null>(null);
+
 async function Entrar(): Promise<void> {
-  const response = await loginAuth({
-    email: form.value.email,
-    password: form.value.password,
-  });
+  errorMessage.value = null;
+  try{
+    const response = await loginAuth({
+      email: form.value.email,
+      password: form.value.password,
+    });
+    localStorage.setItem("token", response.token);
+    router.push("/home");
+  } catch (error: any) {
+    if(error?.reponse?.status === 401){
+      errorMessage.value = "Email ou senha inválidos.";
+    } else {
+      errorMessage.value = "Ocorreu um erro ao tentar logar. Tente novamente mais tarde.";
+    }
+  }
 
   // se backend retornar token, você pode salvar aqui:
   // localStorage.setItem("token", response.token);
-  localStorage.setItem("token", response.token);
-  router.push("/home");
   
 }
 

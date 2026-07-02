@@ -21,10 +21,9 @@ const router = createRouter({
       meta: { requiresAuth: true, role: "ROLE_ADMIN" },
     },
     {
-      path: "/erros",
-      name: "erros",
+      path: "/:pathMatch(.*)*",
+      name: "not-found",
       component: () => import("../views/ErrosView.vue"),
-      meta: { requiresAuth: true },
     },
     {
       path: "/historico",
