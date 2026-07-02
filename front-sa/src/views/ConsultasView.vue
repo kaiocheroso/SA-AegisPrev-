@@ -87,7 +87,7 @@
                         Ver
                     </button>
 
-                    <button v-if="isAdmin" class="bg-red-500 text-white px-3 py-2 rounded">
+                    <button v-if="isAdmin" @click="excluirConsulta(consulta.idConsulta)" class="bg-red-500 text-white px-3 py-2 rounded">
                         Excluir
                     </button>
                 </div>
@@ -241,7 +241,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { getConsultasAdmin, getConsultasMedico , getConsultaById } from "@/services/api";
+import { getConsultasAdmin, getConsultasMedico , getConsultaById , deleteConsulta} from "@/services/api";
 import type { Consulta } from "@/interfaces/Consulta";
 import type { JwtPayload } from "@/interfaces/JwtPayload";
 
@@ -264,6 +264,27 @@ async function carregarConsultas() {
     consultas.value = await getConsultasMedico();
   }
 }
+
+async function excluirConsulta(id: number) {
+  const confirmar = confirm("Deseja realmente excluir esta consulta?");
+
+  if (!confirmar) return;
+
+  try {
+    await deleteConsulta(id);
+
+    // Atualiza a tabela
+    consultas.value = consultas.value.filter(
+      consulta => consulta.idConsulta !== id
+    );
+
+    alert("Consulta excluída com sucesso!");
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao excluir a consulta.");
+  }
+}
+
 
 function formatarData(data: string) {
   return new Date(data).toLocaleString("pt-BR");

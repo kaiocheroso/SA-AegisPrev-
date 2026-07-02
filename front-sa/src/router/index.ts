@@ -16,10 +16,10 @@ const router = createRouter({
       component: () => import("../views/CadastroView.vue"),
     },
     {
-      path: "/descricao/:id",
-      name: "descricao",
-      component: () => import("../views/DescricaoView.vue"),
-      meta: { requiresAuth: true },
+      path: "/dashboard",
+      name: "dashboard",
+      component: () => import("../views/DashboardView.vue"),
+      meta: { requiresAuth: true, role: "ROLE_ADMIN" },
     },
     {
       path: "/erros",
@@ -36,24 +36,24 @@ const router = createRouter({
 
     {
       path: "/cadastrar-consulta",
-      name: "Consulta",
+      name: "consulta",
       component: () => import("../views/CadastrarConsultaView.vue"),
       meta: { requiresAuth: true },
     },
     {
       path: "/entrar",
-      name: "Entrar",
+      name: "entrar",
       component: () => import("../views/EntrarView.vue"),
     },
     {
-      path: "/editar/:id",
-      name: "EditarPaciente",
-      component: () => import("@/views/EditarPacienteView.vue"),
-      meta: { requiresAuth: true },
+      path: "/permissoes", //modificar
+      name: "permissoes",
+      component: () => import("@/views/AdminView.vue"),
+      meta: { requiresAuth: true, role: "ROLE_ADMIN" },
     },
     {
       path: "/consultas",
-      name: "Consultas",
+      name: "consultas",
       component: () => import("@/views/ConsultasView.vue"),
       meta: { requiresAuth: true },
     }
@@ -63,19 +63,39 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
 
-  // se precisa login e não tem token → manda pro login
+  if(!token){
+    return;
+  }
+
+  // sem login
   if (to.meta.requiresAuth && !token) {
-    next("/entrar");
+    return next("/entrar");
   }
 
-  // se já está logado e tenta ir pro login → manda pra home
-  else if (to.path === "/entrar" && token) {
-    next("/home");
+  // pega role do token
+  let role = null;
+
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      role = payload.role;
+    } catch (e) {
+      console.error("Token inválido");
+      return next("/entrar");
+    }
   }
 
-  else {
-    next();
+  // se rota exige role específica
+  if (to.meta.role && to.meta.role !== role) {
+    return next("/home"); // ou página 403
   }
+
+  // já logado tentando login
+  if (to.path === "/entrar" && token) {
+    return next("/home");
+  }
+
+  return next();
 });
 
 //  :)  (:  ("");

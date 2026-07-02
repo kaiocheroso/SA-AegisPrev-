@@ -60,7 +60,7 @@
 
         <p class="text-center text-gray-500 mt-4 text-sm">
           Já possui uma conta?
-          <router-link to="/Entrar" class="text-blue-600 hover:underline"
+          <router-link to="/entrar" class="text-blue-600 hover:underline"
             >Entrar</router-link
           >
         </p>

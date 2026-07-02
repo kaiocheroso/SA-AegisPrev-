@@ -30,26 +30,7 @@
         <p class="text-gray-600"></p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-2xl shadow-md">
-          <h3 class="text-gray-500"></h3>
-          <p class="text-4xl font-bold text-cyan-700 mt-2"></p>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl shadow-md">
-          <h3 class="text-gray-500"></h3>
-          <p class="text-4xl font-bold text-emerald-600 mt-2"></p>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl shadow-md">
-          <h3 class="text-gray-500"></h3>
-          <p class="text-4xl font-bold text-blue-600 mt-2"></p>
-        </div>
-      </div>
-
-      <h3 class="text-2xl font-bold text-cyan-800 mb-4"></h3>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div :class="[ 'grid gap-6', isAdmin ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2' ]">
         <RouterLink to="/historico" class="block w-full">
           <div
             class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition text-left h-full"
@@ -68,7 +49,62 @@
             </p>
           </div>
         </RouterLink>
+
+        <!-- Terceira Div -->
+          <!-- Área Administrativa -->
+          <RouterLink v-if="isAdmin" to="/permissoes" class="block w-full">
+            <div
+              class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition text-left h-full"
+            >
+              <h4 class="font-semibold text-cyan-700 text-lg">
+                Área Administrativa
+              </h4>
+              <p class="text-gray-500 text-sm mt-2">
+                Gerencie permissões e administradores.
+              </p>
+            </div>
+          </RouterLink>
+
+          <!-- Dashboard -->
+          <RouterLink
+            v-if="isAdmin"
+            to="/dashboard"
+            class="block w-full"
+          >
+            <div
+              class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition text-left h-full border border-cyan-200"
+            >
+              <h4 class="font-semibold text-cyan-700 text-lg">
+                Dashboard
+              </h4>
+              <p class="text-gray-500 text-sm mt-2">
+                Visualize estatísticas do sistema.
+              </p>
+            </div>
+          </RouterLink>
+
       </div>
     </main>
   </div>
+  
 </template>
+<script setup>
+import { computed } from "vue";
+
+const token = localStorage.getItem("token");
+
+const isAdmin = computed(() => {
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+
+    console.log(payload);
+
+    return payload.role === "ROLE_ADMIN";
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+});
+</script>

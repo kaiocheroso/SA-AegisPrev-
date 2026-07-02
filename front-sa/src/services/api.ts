@@ -8,6 +8,15 @@ const api = axios.create({
   baseURL: "http://localhost:8080",
 });
 
+
+export async function getMedicoByEmail(email: string) {
+  const response = await api.get("/medicos", {
+    params: { email },
+  });
+
+  return response.data;
+}
+
 export async function getPacientes(params?: {
   cpfPaciente?: string;
   nomePaciente?: string;
@@ -56,6 +65,16 @@ export async function getConsultaById(id: number) {
   return response.data;
 }
 
+export async function getTopDoencas() {
+  const response = await api.get("/admin/dashboard/top-doencas");
+  return response.data;
+}
+
+export async function getRankingMedicos() {
+  const response = await api.get("/admin/dashboard/top-medicos");
+  return response.data;
+}
+
 export async function postConsulta(data: ConsultaRequest) {
   return api.post("/consultas", data);
 }
@@ -65,25 +84,6 @@ export async function deleteConsulta(id: number) {
   return response.data;
 }
 
-
-/*export async function postPacientes(pacientes: Omit<Pacientes, "id">) {
-  await api.post("/pacientes", pacientes);
-}
-
-export async function deletePaciente(id: string | number) {
-  const response = await api.delete(`/pacientes/${id}`);
-  return response.data;
-}
-
-export async function editarPaciente(
-  id: number,
-  paciente: Omit<Pacientes, "id">,
-) {
-  const response = await api.put(`/pacientes/${id}`, paciente);
-  return response.data;
-}*/
-
-
 export async function postMedico(medico: Omit<Medico, "id">) {
   await api.post<Medico>("/medicos", medico);
 }
@@ -92,6 +92,27 @@ export async function loginAuth(auth: { email: string; password: string }) {
   const response = await api.post("/auth/login", auth);
   return response.data;
 }
+
+export async function removerAdmin(id: number) {
+  const response = await api.put(`/admin/usuario/${id}/remover-admin`);
+  return response.data;
+}
+
+export async function tornarAdminSemana(id: number) {
+  const response = await api.put(`/admin/usuario/${id}/admin-semana`);
+  return response.data;
+}
+
+export async function tornarAdminMes(id: number) {
+  const response = await api.put(`/admin/usuario/${id}/admin-mes`);
+  return response.data;
+}
+
+export async function tornarAdminPermanente(id: number) {
+  const response = await api.put(`/admin/usuario/${id}/admin-permanente`);
+  return response.data;
+}
+
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
