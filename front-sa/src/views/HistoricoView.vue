@@ -312,7 +312,9 @@ const isAdmin = computed(() => {
   if (!token) return false;
 
   try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
+    const [, payloadBase64] = token.split(".");
+    if (!payloadBase64) return false;
+    const payload = JSON.parse(atob(payloadBase64));
     return payload.role === "ROLE_ADMIN";
   } catch (e) {
     console.error(e);

@@ -170,11 +170,11 @@
   </div>
   
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { getMedicoLogado } from "@/services/api";
 
-const medico = ref(null);
+const medico = ref<any>(null);
 const menuOpen = ref(false);
 const profileOpen = ref(false);
 
@@ -198,7 +198,9 @@ function decodeToken() {
   if (!token) return null;
 
   try {
-    return JSON.parse(atob(token.split(".")[1]));
+    const [, payloadBase64] = token.split(".");
+    if (!payloadBase64) return null;
+    return JSON.parse(atob(payloadBase64));
   } catch (e) {
     return null;
   }

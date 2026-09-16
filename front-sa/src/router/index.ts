@@ -71,7 +71,9 @@ router.beforeEach(async (to, from) => {
 
   if (token) {
     try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
+      const [, payloadBase64] = token.split(".");
+      if (!payloadBase64) throw new Error("Token malformado");
+      const payload = JSON.parse(atob(payloadBase64));
       role = payload.role;
     } catch (e) {
       console.error("Token inválido");
