@@ -9,6 +9,10 @@ lerna-debug.log*
 
 node_modules
 .DS_Store
+
+# Env
+.env
+.env.local
 dist
 dist-ssr
 coverage
