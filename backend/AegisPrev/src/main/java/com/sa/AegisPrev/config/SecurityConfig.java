@@ -58,7 +58,10 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/swagger-ui/**"),
                                 new AntPathRequestMatcher("/swagger-ui.html"),
                                 new AntPathRequestMatcher("/v3/api-docs/**"),
+<<<<<<< HEAD
                                 new AntPathRequestMatcher("/error"),
+=======
+>>>>>>> 6d937833823fdc50220f2e17aa457df72443a77a
                                 new AntPathRequestMatcher("/auth/**")
                         ).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/medicos", "POST")).permitAll()
