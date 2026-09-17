@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -47,6 +48,9 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+                .exceptionHandling(handling ->
+                        handling.authenticationEntryPoint(authenticationEntryPoint()))
+
                 .authorizeHttpRequests(auth -> auth
 
                         .requestMatchers(
@@ -63,6 +67,18 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json;charset=UTF-8");
+            String mensagem = authException.getMessage() != null
+                    ? authException.getMessage()
+                    : "Não autenticado";
+            response.getWriter().write("{\"erro\":\"" + mensagem.replace("\"", "'") + "\"}");
+        };
     }
 
     @Bean
