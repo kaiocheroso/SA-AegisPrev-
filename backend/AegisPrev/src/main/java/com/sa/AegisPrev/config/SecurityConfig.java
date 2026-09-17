@@ -4,7 +4,6 @@ import com.sa.AegisPrev.security.JwtFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -53,13 +53,14 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        .requestMatchers(new AntPathRequestMatcher("/**", "OPTIONS")).permitAll()
                         .requestMatchers(
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/v3/api-docs/**",
-                                "/auth/**"
+                                new AntPathRequestMatcher("/swagger-ui/**"),
+                                new AntPathRequestMatcher("/swagger-ui.html"),
+                                new AntPathRequestMatcher("/v3/api-docs/**"),
+                                new AntPathRequestMatcher("/auth/**")
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/medicos").permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/medicos", "POST")).permitAll()
                         .anyRequest().authenticated()
                 )
 
