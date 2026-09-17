@@ -4,8 +4,8 @@ import com.sa.AegisPrev.security.JwtFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -47,15 +48,20 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+                .exceptionHandling(handling ->
+                        handling.authenticationEntryPoint(authenticationEntryPoint()))
+
                 .authorizeHttpRequests(auth -> auth
 
+                        .requestMatchers(new AntPathRequestMatcher("/**", "OPTIONS")).permitAll()
                         .requestMatchers(
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/v3/api-docs/**",
-                                "/auth/**"
+                                new AntPathRequestMatcher("/swagger-ui/**"),
+                                new AntPathRequestMatcher("/swagger-ui.html"),
+                                new AntPathRequestMatcher("/v3/api-docs/**"),
+                                new AntPathRequestMatcher("/error"),
+                                new AntPathRequestMatcher("/auth/**")
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/medicos").permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/medicos", "POST")).permitAll()
                         .anyRequest().authenticated()
                 )
 
@@ -63,6 +69,28 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+            // LOG TEMPORÁRIO DE DIAGNÓSTICO - remover depois de resolver o problema
+            System.out.println("=== DIAGNOSTICO 403/401 ===");
+            System.out.println("Method: " + request.getMethod());
+            System.out.println("RequestURI: " + request.getRequestURI());
+            System.out.println("ServletPath: " + request.getServletPath());
+            System.out.println("ContextPath: " + request.getContextPath());
+            System.out.println("PathInfo: " + request.getPathInfo());
+            System.out.println("QueryString: " + request.getQueryString());
+            System.out.println("===========================");
+
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json;charset=UTF-8");
+            String mensagem = authException.getMessage() != null
+                    ? authException.getMessage()
+                    : "Não autenticado";
+            response.getWriter().write("{\"erro\":\"" + mensagem.replace("\"", "'") + "\"}");
+        };
     }
 
     @Bean

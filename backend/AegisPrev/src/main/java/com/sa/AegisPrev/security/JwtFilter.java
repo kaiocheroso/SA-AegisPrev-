@@ -35,6 +35,9 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        // LOG TEMPORÁRIO DE DIAGNÓSTICO - remover depois de resolver o problema
+        System.out.println("[JwtFilter] " + request.getMethod() + " " + request.getRequestURI());
+
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {

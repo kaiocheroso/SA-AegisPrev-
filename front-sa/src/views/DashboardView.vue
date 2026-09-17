@@ -95,8 +95,18 @@
 import { ref, onMounted } from "vue";
 import { getTopDoencas, getRankingMedicos } from "@/services/api";
 
-const topDoencas = ref([]);
-const rankingMedicos = ref([]);
+interface TopDoenca {
+  nomeDoenca: string;
+  quantidade: number;
+}
+
+interface RankingMedico {
+  nomeMedico: string;
+  quantidade?: number;
+}
+
+const topDoencas = ref<TopDoenca[]>([]);
+const rankingMedicos = ref<RankingMedico[]>([]);
 const loading = ref(false);
 
 async function carregarDashboard() {
