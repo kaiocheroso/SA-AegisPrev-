@@ -73,6 +73,16 @@ public class SecurityConfig {
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
+            // LOG TEMPORÁRIO DE DIAGNÓSTICO - remover depois de resolver o problema
+            System.out.println("=== DIAGNOSTICO 403/401 ===");
+            System.out.println("Method: " + request.getMethod());
+            System.out.println("RequestURI: " + request.getRequestURI());
+            System.out.println("ServletPath: " + request.getServletPath());
+            System.out.println("ContextPath: " + request.getContextPath());
+            System.out.println("PathInfo: " + request.getPathInfo());
+            System.out.println("QueryString: " + request.getQueryString());
+            System.out.println("===========================");
+
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType("application/json;charset=UTF-8");
             String mensagem = authException.getMessage() != null
