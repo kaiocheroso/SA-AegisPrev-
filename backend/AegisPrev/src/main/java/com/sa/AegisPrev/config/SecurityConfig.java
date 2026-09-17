@@ -19,7 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -58,10 +57,7 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/swagger-ui/**"),
                                 new AntPathRequestMatcher("/swagger-ui.html"),
                                 new AntPathRequestMatcher("/v3/api-docs/**"),
-<<<<<<< HEAD
                                 new AntPathRequestMatcher("/error"),
-=======
->>>>>>> 6d937833823fdc50220f2e17aa457df72443a77a
                                 new AntPathRequestMatcher("/auth/**")
                         ).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/medicos", "POST")).permitAll()
